@@ -13,7 +13,7 @@
 <br>
 
 <div align="center">
-  <img alt="commit snake animation" src="https://raw.githubusercontent.com/jsh340866/jsh340866/output/github-contribution-grid-snake-dark.svg">
+  <img alt="commit snake animation" src="https://raw.githubusercontent.com/jsh340866/jsh340866/output/github-contribution-grid-snake.svg">
 </div>
 
 <br>
