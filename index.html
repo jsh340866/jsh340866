@@ -161,8 +161,9 @@
   .chip .sw{width:8px;height:8px;border-radius:3px;}
 
   /* CERTS */
-  .cert-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
-  @media(max-width:860px){.cert-grid{grid-template-columns:1fr;}}
+  .cert-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+  @media(max-width:960px){.cert-grid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:560px){.cert-grid{grid-template-columns:1fr;}}
   .cert-card{position:relative;overflow:hidden;}
   .cert-status{
     position:absolute;top:24px;right:24px;font-size:11px;font-family:'JetBrains Mono',monospace;
@@ -409,6 +410,11 @@
         <span class="cert-status status-progress">취득 예정</span>
         <h3>SQLD</h3>
         <p>SQL 개발자 자격 · 데이터 모델링과 쿼리 최적화 역량 준비 중</p>
+      </div>
+      <div class="card cert-card">
+        <span class="cert-status status-done">취득 완료</span>
+        <h3>2종 보통 운전면허</h3>
+        <p>개인 이동 수단 확보를 위해 취득</p>
       </div>
     </div>
   </section>
