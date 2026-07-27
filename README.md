@@ -1,26 +1,57 @@
-<div align= "center">
-    <img src="https://capsule-render.vercel.app/api?type=soft&color=gradient&height=120&text=Jungseungwon's%20Github&animation=fadeIn&fontColor=ffffff&fontSize=60" />
-    </div>
-    <div align= "center"> 
-    <h2 style="border-bottom: 1px solid #d8dee4; color: #282d33;"> 풀스택 개발자 </h2>  
-    <div style="font-weight: 700; font-size: 15px; text-align: center; color: #282d33;">  </div> 
-    </div>
-    <div align= "center">
-    <h2 style="border-bottom: 1px solid #d8dee4; color: #282d33;"> 🛠️ Tech Stacks </h2> <br> 
-    <div style="margin: 0 auto; text-align: center;" align= "center"> <img src="https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=Java&logoColor=white">
-          <img src="https://img.shields.io/badge/C-A8B9CC?style=for-the-badge&logo=C&logoColor=white">
-          <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=Git&logoColor=white">
-          <img src="https://img.shields.io/badge/Javascript-F7DF1E?style=for-the-badge&logo=Javascript&logoColor=white">
-          <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=MySQL&logoColor=white">
-          <br/><img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=white">
-          <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=for-the-badge&logo=Spring Boot&logoColor=white">
-          <img src="https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=Slack&logoColor=white">
-          </div>
-    </div>
-    <div align= "center">
-    <h2 style="border-bottom: 1px solid #d8dee4; color: #282d33;"> 🧑‍💻 Contact me </h2> <br> 
-    <div align= "center"> <a href=mailto:jsh340866@gmail.com> <img src="https://img.shields.io/badge/Gmail-EA4335?style=for-the-badge&logo=Gmail&logoColor=white&link=mailto:jsh340866@gmail.com"> </a>
-          </div>  <br> 
-    <div align= "center">  </div> 
-    </div>
-    
+<div align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=180&text=Jungseungwon&fontColor=ffffff&fontSize=45&fontAlignY=35&desc=Backend%20Developer&descAlignY=55&descSize=20" />
+</div>
+
+<div align="center">
+  <h3>안녕하세요, 백엔드 개발자 정승원입니다 👋</h3>
+  <p>Spring Boot 기반 백엔드와 외부 API 연동, 데이터 배치 처리에 관심이 많습니다.</p>
+</div>
+
+<br>
+
+## 🛠️ Tech Stack
+
+<div align="center">
+  <img src="https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=Java&logoColor=white">
+  <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=for-the-badge&logo=Spring Boot&logoColor=white">
+  <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=MySQL&logoColor=white">
+  <img src="https://img.shields.io/badge/JPA%2FHibernate-59666C?style=for-the-badge&logo=Hibernate&logoColor=white">
+  <br/>
+  <img src="https://img.shields.io/badge/Javascript-F7DF1E?style=for-the-badge&logo=Javascript&logoColor=white">
+  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=white">
+  <img src="https://img.shields.io/badge/C-A8B9CC?style=for-the-badge&logo=C&logoColor=white">
+  <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=Git&logoColor=white">
+  <img src="https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=Slack&logoColor=white">
+</div>
+
+<br>
+
+## 📌 Projects
+
+### valuepick — 주식/재무 데이터 분석 백엔드
+
+Spring Boot 기반으로 국내 주식·재무 데이터를 수집하고 분석하는 백엔드 프로젝트입니다.
+
+- **외부 API 연동**: DART(재무제표·공시), 공공데이터포털(주가, XML 파싱), 한국수출입은행(환율), KRX(상장사 정보)를 RestTemplate으로 연동
+- **스케줄링**: `@Scheduled`를 활용해 평일 16시 당일 데이터 수집, 매일 새벽 2시 오래된 데이터 정리 등 배치 작업 자동화
+- **비동기 처리**: `@Async`를 활용한 대량 데이터 수집 비동기 처리
+- **아키텍처**: JPA Repository + Service 계층 구조, MySQL(investdb) 기반 데이터 저장
+- **핵심 도메인**: Company, StockPrice, StockIndicator, FinancialStatement, DividendInfo, Exchange, Top100, MarketIndex
+
+<br>
+
+## 📜 Certificates
+
+- ✅ 정보처리기사
+- 📖 빅데이터분석기사 (취득 예정)
+- 📖 SQLD (취득 예정)
+
+<br>
+
+## 📫 Contact
+
+<div align="center">
+  <a href="mailto:jsh340866@gmail.com">
+    <img src="https://img.shields.io/badge/Gmail-EA4335?style=for-the-badge&logo=Gmail&logoColor=white">
+  </a>
+</div>
