@@ -4,7 +4,20 @@
 
 <div align="center">
   <h3>안녕하세요, 백엔드 개발자 정승원입니다 👋</h3>
-  <p>Spring Boot 기반 백엔드와 외부 API 연동, 데이터 배치 처리에 관심이 많습니다.</p>
+  <p>데이터를 안정적으로 수집하고 다루는 백엔드에 관심이 많습니다. Spring Boot 기반 외부 API 연동과 데이터 배치 처리를 주로 다룹니다.</p>
+  <a href="https://jsh340866.github.io/jsh340866/">
+    <img src="https://img.shields.io/badge/Portfolio-000000?style=for-the-badge&logo=googlechrome&logoColor=white">
+  </a>
+</div>
+
+<br>
+
+<div align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/jsh340866/jsh340866/output/github-contribution-grid-snake-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/jsh340866/jsh340866/output/github-contribution-grid-snake.svg">
+    <img alt="commit snake animation" src="https://raw.githubusercontent.com/jsh340866/jsh340866/output/github-contribution-grid-snake.svg">
+  </picture>
 </div>
 
 <br>
