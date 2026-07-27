@@ -63,4 +63,5 @@ Spring Boot 기반으로 국내 주식·재무 데이터를 수집하고 분석�
   <a href="mailto:jsh340866@gmail.com">
     <img src="https://img.shields.io/badge/Gmail-EA4335?style=for-the-badge&logo=Gmail&logoColor=white">
   </a>
+  <p>jsh340866@gmail.com</p>
 </div>
