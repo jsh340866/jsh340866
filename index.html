@@ -92,7 +92,7 @@
   .btn-primary:hover{box-shadow:0 10px 30px -8px rgba(124,139,255,0.55);}
   .btn-ghost{background:var(--surface);border:1px solid var(--border);color:var(--text);}
   .hide-mobile{display:flex;}
-  @media(max-width:760px){ nav.links{display:none;} }
+  @media(max-width:760px){ nav.links{display:none;} .hide-mobile{display:none !important;} }
 
   /* HERO */
   .hero{padding:168px 0 100px;position:relative;}
@@ -108,11 +108,13 @@
   .hero h1 .grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;}
   .hero p.lead{font-size:clamp(16px,1.7vw,19px);color:var(--text-dim);max-width:640px;margin:0 0 36px;}
   .hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:56px;}
-  .stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border-soft);border:1px solid var(--border-soft);border-radius:var(--radius);overflow:hidden;}
-  .stat{background:var(--surface);padding:20px 18px;}
-  .stat .num{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;}
+  .stat-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--border-soft);border:1px solid var(--border-soft);border-radius:var(--radius);overflow:hidden;}
+  .stat{background:var(--surface);padding:20px 18px;min-width:0;}
+  .stat .num{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;overflow-wrap:anywhere;}
   .stat .label{font-size:12.5px;color:var(--text-faint);margin-top:4px;}
-  @media(max-width:700px){.stat-row{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:700px){.stat-row{grid-template-columns:repeat(2,minmax(0,1fr));}}
+  .stat-row.cols-2{grid-template-columns:repeat(2,minmax(0,1fr));}
+  @media(max-width:480px){.stat-row{grid-template-columns:minmax(0,1fr);}}
 
   /* SECTION */
   section{padding:100px 0;position:relative;}
@@ -290,8 +292,8 @@
   <!-- HERO -->
   <section class="hero wrap">
     <span class="eyebrow"><span class="pulse"></span>OPEN TO WORK · 국비 풀스택 과정 26.08 수료 예정</span>
-    <h1 class="reveal visible">데이터가 정확히 쌓이고<br>서비스가 <span class="grad">매일 같은 시간에</span><br>정확히 도는 백엔드를 만듭니다</h1>
-    <p class="lead reveal visible">데이터를 다루는 백엔드 개발자 정승원입니다. 외부 API 데이터 수집 파이프라인과 스케줄링, 도메인 로직 설계에 관심이 많고, 직접 호출·검증해서 확인한 사실만 코드로 옮기는 걸 원칙으로 삼고 있습니다.</p>
+    <h1 class="reveal visible">반갑습니다, <span class="grad" style="font-size:1.15em;font-weight:800">정승원</span>입니다</h1>
+    <p class="lead reveal visible">데이터를 다루는 백엔드 개발자를 목표로 하고 있습니다. 데이터가 안정적으로 쌓이고, 정확한 시간에 정확히 도는 백엔드를 만드는 일에 관심이 많습니다.</p>
     <div class="hero-actions reveal visible">
       <a class="btn btn-primary" href="#project">프로젝트 보기 →</a>
       <a class="btn btn-ghost" href="https://github.com/jsh340866" target="_blank" rel="noopener">GitHub</a>
@@ -357,7 +359,6 @@
           <span class="chip"><span class="sw" style="background:#6db33f"></span>Spring Boot</span>
           <span class="chip"><span class="sw" style="background:#6db33f"></span>Spring Security</span>
           <span class="chip"><span class="sw" style="background:#000"></span>JWT</span>
-          <span class="chip"><span class="sw" style="background:#eb6221"></span>OAuth2</span>
           <span class="chip"><span class="sw" style="background:#59666c"></span>JPA / Hibernate</span>
           <span class="chip"><span class="sw" style="background:#4479a1"></span>MySQL</span>
           <span class="chip"><span class="sw" style="background:#25a162"></span>JUnit5</span>
@@ -368,41 +369,22 @@
         <div class="sub">협업 경험</div>
         <div class="chips">
           <span class="chip"><span class="sw" style="background:#e34f26"></span>HTML5</span>
-          <span class="chip"><span class="sw" style="background:#1572b6"></span>CSS3 / SCSS</span>
+          <span class="chip"><span class="sw" style="background:#1572b6"></span>CSS3</span>
           <span class="chip"><span class="sw" style="background:#f7df1e"></span>JavaScript</span>
-          <span class="chip"><span class="sw" style="background:#7952b3"></span>Bootstrap5</span>
+          <span class="chip"><span class="sw" style="background:#61dafb"></span>React (학습중)</span>
         </div>
       </div>
       <div class="card">
-        <h3>DevOps & Infra</h3>
-        <div class="sub">배포 파이프라인</div>
+        <h3>Infra & Etc</h3>
+        <div class="sub">배포 · 협업 도구</div>
         <div class="chips">
           <span class="chip"><span class="sw" style="background:#2496ed"></span>Docker</span>
           <span class="chip"><span class="sw" style="background:#009639"></span>NGINX</span>
           <span class="chip"><span class="sw" style="background:#ff9900"></span>Amazon EC2</span>
           <span class="chip"><span class="sw" style="background:#d24939"></span>Jenkins</span>
-          <span class="chip"><span class="sw" style="background:#ff9900"></span>Route 53</span>
           <span class="chip"><span class="sw" style="background:#003a70"></span>Let's Encrypt</span>
-        </div>
-      </div>
-      <div class="card">
-        <h3>Data & ML</h3>
-        <div class="sub">Python 기반 분석</div>
-        <div class="chips">
-          <span class="chip"><span class="sw" style="background:#3776ab"></span>Python</span>
-          <span class="chip"><span class="sw" style="background:#013243"></span>NumPy / pandas</span>
-          <span class="chip"><span class="sw" style="background:#f7931e"></span>scikit-learn</span>
-          <span class="chip"><span class="sw" style="background:#e6522c"></span>Matplotlib / Seaborn</span>
-          <span class="chip"><span class="sw" style="background:#009688"></span>FastAPI</span>
-          <span class="chip"><span class="sw" style="background:#e25a1c"></span>PySpark</span>
-        </div>
-      </div>
-      <div class="card">
-        <h3>Tools & Collaboration</h3>
-        <div class="sub">협업 도구</div>
-        <div class="chips">
-          <span class="chip"><span class="sw" style="background:#f05032"></span>Git / GitHub</span>
-          <span class="chip"><span class="sw" style="background:#f24e1e"></span>Figma</span>
+          <span class="chip"><span class="sw" style="background:#f05032"></span>Git</span>
+          <span class="chip"><span class="sw" style="background:#4a154b"></span>Slack</span>
         </div>
       </div>
     </div>
@@ -595,18 +577,16 @@
     </div>
   </section>
 
-  <!-- TEAM -->
+  <!-- REACH -->
   <section class="wrap">
     <div class="section-head reveal">
-      <span class="kicker">Team</span>
-      <h2>팀원 구성</h2>
-      <p>4인 팀 프로젝트로 진행했습니다.</p>
+      <span class="kicker">Reach</span>
+      <h2>연락처</h2>
+      <p>아래 연락처로 편하게 연락 주세요.</p>
     </div>
-    <div class="team-row reveal">
-      <div class="team-card"><img src="https://avatars.githubusercontent.com/u/155594550?v=4" alt="강현욱" loading="lazy"><div class="nm">강현욱</div></div>
-      <div class="team-card"><img src="https://avatars.githubusercontent.com/u/144120819?v=4" alt="김정희" loading="lazy"><div class="nm">김정희</div></div>
-      <div class="team-card"><img src="https://avatars.githubusercontent.com/u/263509822?v=4" alt="박형규" loading="lazy"><div class="nm">박형규</div></div>
-      <div class="team-card"><img src="https://avatars.githubusercontent.com/u/127188283?v=4" alt="정승원" loading="lazy"><div class="nm">정승원</div><div class="me">ME</div></div>
+    <div class="stat-row cols-2 reveal">
+      <div class="stat"><div class="num" style="font-size:18px">jsh340866@gmail.com</div><div class="label">Email</div></div>
+      <div class="stat"><div class="num" style="font-size:18px">010-3826-2602</div><div class="label">Phone</div></div>
     </div>
   </section>
 

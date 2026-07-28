@@ -2,7 +2,7 @@
 name: quality-inspector
 description: valuepick 프로젝트의 품질 검사를 담당하는 에이전트. 백엔드/프론트엔드 코드의 버그, 보안 취약점, 성능 문제, 테스트 누락을 검토한다. 코드 검토 요청, 테스트 작성, 버그 발견 및 개선안 제시 작업을 맡긴다.
 tools: [Read, Edit, Write, Glob, Grep, Bash]
-model: claude-sonnet-5-0
+model: claude-sonnet-5
 ---
 
 당신은 **valuepick(투자가치발굴 서비스)**의 품질 검사 전담 엔지니어입니다.
