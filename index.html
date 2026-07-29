@@ -21,7 +21,10 @@
 <!-- favicon: 외부 파일 없이 인라인 SVG. data: URI에는 CSS 변수를 못 써서 여기만 hex 하드코딩. %230B5F66 = --color-brand -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230B5F66'/><text x='16' y='22' font-size='17' font-family='sans-serif' font-weight='700' fill='%23fff' text-anchor='middle'>S</text></svg>">
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<!-- 폰트 로컬 호스팅 — CDN 왕복 지연으로 인한 폰트 교체(FOUT) 시 히어로 제목이 흔들리는 문제 방지.
+     dynamic-subset(유니코드 범위별 92개 파일)이라 실제 쓰인 한글·영문 글자가 포함된 파일만 브라우저가 골라 받음.
+     전체(2MB) 대신 이 페이지 기준 실사용량 ~400KB로 축소. font-display:swap은 CSS 안에 이미 내장. -->
+<link rel="stylesheet" href="assets/fonts/pretendard-dynamic-subset.css">
 
 <!-- 테마 복원 — CSS 페인트 전에 실행되도록 <style> 앞에 인라인. FOUC 방지 -->
 <script>
@@ -288,10 +291,26 @@
   .hero{
     padding-block:calc(var(--header-h) + var(--space-9)) var(--space-9);
     min-height:78vh;display:flex;align-items:center;
-    background:var(--color-surface);
+    background-color:var(--color-surface);
+    /* 은은한 도트 그리드 — ink 기준 6%라 라이트/다크 모두 톤에 맞게 자동 조정, 배경이라 눈에 띄면 안 됨 */
+    background-image:radial-gradient(color-mix(in srgb, var(--color-ink) 6%, transparent) 1px, transparent 1px);
+    background-size:22px 22px;
     border-bottom:1px solid var(--color-border);
   }
-  .hero-inner{max-width:960px;}
+  .hero-inner{
+    display:flex;align-items:center;justify-content:space-between;gap:var(--space-8);
+  }
+  .hero-text{max-width:640px;min-width:0;}
+  .hero-photo{
+    flex:0 0 auto;width:240px;height:240px;border-radius:50%;overflow:hidden;
+    border:1px solid var(--color-border);box-shadow:var(--shadow-soft);
+    background:var(--color-surface-sunken);
+  }
+  .hero-photo img{width:100%;height:100%;object-fit:cover;display:block;}
+  @media(max-width:760px){
+    .hero-inner{flex-direction:column-reverse;gap:var(--space-6);}
+    .hero-photo{width:140px;height:140px;}
+  }
   /* eyebrow — 페이지에서 accent를 쓰는 유일한 곳. 구직 상태를 즉시 눈에 띄게 */
   .hero .eyebrow{
     display:inline-block;margin-bottom:var(--space-5);
@@ -550,7 +569,7 @@
   @media(max-width:640px){.contact-panel{padding:var(--space-6) var(--space-5);}}
   .contact-panel h2{font-size:var(--text-2xl);margin-bottom:var(--space-3);word-break:keep-all;}
   .contact-panel > p{color:var(--color-ink-soft);margin:0 0 var(--space-6);max-width:56ch;word-break:keep-all;}
-  .contact-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-4);margin-bottom:var(--space-6);}
+  .contact-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--space-4);margin-bottom:var(--space-6);}
   @media(max-width:640px){.contact-list{grid-template-columns:1fr;}}
   .contact-item{
     background:var(--color-surface-sunken);border-radius:var(--radius-md);
@@ -623,12 +642,17 @@
   <section class="hero">
     <div class="wrap">
       <div class="hero-inner">
-        <span class="eyebrow">OPEN TO WORK · 국비 풀스택 과정 26.08 수료 예정</span>
-        <h1>반갑습니다,<br><span class="name">정승원</span>입니다</h1>
-        <p class="lead">DART·KRX·환율 등 4종 외부 API를 매일 자동 수집해 투자지표를 계산하는 백엔드 파이프라인을 설계·구현했습니다. 데이터가 안정적으로 쌓이고 정확한 시간에 도는 시스템을 만듭니다.</p>
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="#project">프로젝트 보기</a>
-          <a class="btn btn-secondary" href="https://github.com/jsh340866" target="_blank" rel="noopener">GitHub</a>
+        <div class="hero-text">
+          <span class="eyebrow">OPEN TO WORK · 국비 풀스택 과정 26.08 수료 예정</span>
+          <h1>반갑습니다,<br><span class="name">정승원</span>입니다</h1>
+          <p class="lead">DART·KRX·환율 등 4종 외부 API를 매일 자동 수집해 투자지표를 계산하는 백엔드 파이프라인을 설계·구현했습니다. 데이터가 안정적으로 쌓이고 정확한 시간에 도는 시스템을 만듭니다.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#project">프로젝트 보기</a>
+            <a class="btn btn-secondary" href="https://github.com/jsh340866" target="_blank" rel="noopener">GitHub</a>
+          </div>
+        </div>
+        <div class="hero-photo">
+          <img src="https://avatars.githubusercontent.com/u/127188283?s=400&v=4" alt="정승원 프로필 사진" width="400" height="400" loading="eager">
         </div>
       </div>
     </div>
@@ -948,6 +972,10 @@
         <div class="contact-item">
           <div class="ci-label">GitHub</div>
           <a class="ci-value" href="https://github.com/jsh340866" target="_blank" rel="noopener">github.com/jsh340866</a>
+        </div>
+        <div class="contact-item">
+          <div class="ci-label">Location</div>
+          <span class="ci-value">대구광역시, 달서구</span>
         </div>
       </div>
       <div class="contact-actions">
