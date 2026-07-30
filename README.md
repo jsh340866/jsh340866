@@ -58,7 +58,7 @@ Spring Boot 기반으로 국내 주식·재무 데이터를 수집하고 분석�
 
 - **DB 설계**: MySQL(investdb) 기반 스키마 설계 — 기업·주가·재무·지표·배당·환율·지수 도메인 간 관계 정의, 일별 시세/지표 대량 적재를 고려한 테이블 구성
 - **외부 API 연동**: DART(재무제표·공시), 공공데이터포털(주가, XML 파싱), 한국수출입은행(환율), KRX(상장사 정보)를 RestTemplate으로 연동
-- **스케줄링**: `@Scheduled`를 활용해 평일 16시 당일 데이터 수집, 매일 새벽 2시 오래된 데이터 정리 등 배치 작업 자동화
+- **스케줄링**: `@Scheduled` cron으로 평일 새벽 배치 파이프라인 자동화 — 환율 01:00 → 주가 01:20 → 지표 계산 01:50 → TOP100 스코어링 02:00, KRX 지수는 데이터 확정 시각에 맞춰 08:30 분리 실행, 오래된 데이터 정리 02:30
 - **비동기 처리**: `@Async`를 활용한 대량 데이터 수집 비동기 처리
 - **아키텍처**: JPA Repository + Service 계층 구조
 - **핵심 도메인**: Company, StockPrice, StockIndicator, FinancialStatement, DividendInfo, Exchange, Top100, MarketIndex
