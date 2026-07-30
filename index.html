@@ -918,8 +918,8 @@
         <summary><span class="label label-muted">ISSUE 06</span><h4>스케줄러 파이프라인 순서 보장</h4></summary>
         <div class="ts-body">
           <div class="ts-block"><div class="lbl">Problem</div><p>주가 → 지표 계산 → TOP100은 앞 단계 결과에 의존하는 순차 파이프라인인데, @Scheduled는 각자 독립 트리거라 순서를 강제할 방법이 마땅치 않았음</p></div>
-          <div class="ts-block"><div class="lbl">Approach</div><p>cron 분(minute) 값을 의도적으로 어긋나게 배치(환율 01:00 → 지수 01:10 → 주가 01:20 → 지표 01:50 → TOP100 02:00), 삭제 작업도 시차를 둬 앞 단계 완료 시간을 확보</p></div>
-          <div class="ts-result">결과: 별도 오케스트레이터 없이 단계 순서 보장</div>
+          <div class="ts-block"><div class="lbl">Approach</div><p>cron 분(minute) 값을 의도적으로 어긋나게 배치(환율 01:00 → 주가 01:20 → 지표 01:50 → TOP100 02:00), 삭제 작업도 시차를 둬 앞 단계 완료 시간을 확보. 단, 코스피 지수 수집(MarketIndexScheduler)은 01:10에 뒀을 때 KRX 데이터가 아직 확정되지 않아 IllegalStateException으로 매번 실패했기에, 확정 시각(08:00 전후)을 확인하고 파이프라인에서 떼어내 08:30에 독립 실행</p></div>
+          <div class="ts-result">결과: 별도 오케스트레이터 없이 단계 순서 보장, 지수 수집 실패도 제거</div>
         </div>
       </details>
       <details class="ts-card">

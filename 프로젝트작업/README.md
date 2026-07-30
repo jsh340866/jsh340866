@@ -299,11 +299,11 @@ invest-project/
 | 시각 | 스케줄러 | 작업 |
 |---|---|---|
 | 01:00 (평일) | ExchangeScheduler | 환율 수집 |
-| 01:10 (평일) | MarketIndexScheduler | 코스피 지수 수집 |
 | 01:20 (평일) | StockPriceScheduler | 주가 수집 |
 | 01:50 (평일) | IndicatorScheduler | 투자지표 계산 (PER/PBR/ROE/F-Score/모멘텀 등) |
 | 02:00 (평일) | Top100Scheduler | TOP100 스코어 계산 |
 | 02:30~02:35 | 각 스케줄러 | 7일 이전 시세/지수/환율/TOP100 데이터 정리 |
+| 08:30 (평일) | MarketIndexScheduler | 코스피 지수 수집 (KRX 확정 시각 08:00 이후 여유를 두고 조회) |
 | 매시 정각 | NewsScheduler | 종목별 뉴스 수집 |
 | 매년 1월 1일 | CompanyScheduler | 기업정보(DART) 수집 |
 | 매년 4월 1일 | FinancialScheduler / DividendScheduler | 사업보고서·배당 정보 수집 |
@@ -367,9 +367,11 @@ DART API로 전체 상장사 재무제표를 수집하다 보니 신경 쓸 게 
 
 ### 6. 스케줄러 파이프라인 순서 보장 — cron 분 단위 스태거링
 
-주가 → 지표 계산 → TOP100 스코어링은 앞 단계 결과에 의존하는 순차 파이프라인인데, `@Scheduled`는 각자 독립적으로 트리거되다 보니 순서를 강제할 방법이 마땅치 않았습니다. 그래서 크론의 분(minute) 값을 의도적으로 어긋나게 배치해서 앞 단계가 끝날 시간을 확보하는 방식을 택했습니다: `ExchangeScheduler` 01:00 → `MarketIndexScheduler` 01:10 → `StockPriceScheduler` 01:20 → [IndicatorScheduler](valuepick/src/main/java/com/example/demo/domain/scheduled/IndicatorScheduler.java#L18-20) 01:50(주석: "StockPriceScheduler 수집 완료 후, Top100Scheduler 이전") → `Top100Scheduler` 02:00. 삭제 스케줄러들도 02:30, TOP100 삭제만 02:35로 한 단계 늦춰서 실행되게 했습니다.
+주가 → 지표 계산 → TOP100 스코어링은 앞 단계 결과에 의존하는 순차 파이프라인인데, `@Scheduled`는 각자 독립적으로 트리거되다 보니 순서를 강제할 방법이 마땅치 않았습니다. 그래서 크론의 분(minute) 값을 의도적으로 어긋나게 배치해서 앞 단계가 끝날 시간을 확보하는 방식을 택했습니다: `ExchangeScheduler` 01:00 → `StockPriceScheduler` 01:20 → [IndicatorScheduler](valuepick/src/main/java/com/example/demo/domain/scheduled/IndicatorScheduler.java#L18-20) 01:50(주석: "StockPriceScheduler 수집 완료 후, Top100Scheduler 이전") → `Top100Scheduler` 02:00. 삭제 스케줄러들도 02:30, TOP100 삭제만 02:35로 한 단계 늦춰서 실행되게 했습니다.
 
 같은 파일들에 "전 영업일자 조회" 로직(`LocalDate.now().minusDays(요일==월요일 ? 3 : 1)`)도 반복해서 넣었습니다. 월요일에만 3일을 빼는 이유는 주말을 건너뛰고 직전 영업일(금요일)을 맞추기 위해서입니다.
+
+`MarketIndexScheduler`(코스피 지수 수집)만 이 파이프라인에서 떼어내 08:30에 독립적으로 돌립니다. 처음엔 다른 스케줄러들처럼 01:10에 맞춰뒀는데, 실제 운영 로그를 보니 KRX 지수 데이터가 그 시각까지 확정되지 않아 `IllegalStateException`으로 매번 실패하고 있었습니다. KRX 확정 시각이 08:00 전후인 걸 확인하고 나서 08:30으로 옮겨 여유를 뒀습니다.
 
 [IndicatorScheduler.activeYear()](valuepick/src/main/java/com/example/demo/domain/scheduled/IndicatorScheduler.java#L31-36)는 "사업보고서는 매년 4월 1일에 전년도분이 공시되므로, 그 전엔 재작년 데이터가 이후엔 작년 데이터가 최신"이라는 근거로 4월 1일을 기준점 삼아 조회 연도를 나누게 했습니다.
 
@@ -417,9 +419,82 @@ docker compose up --build -d
 
 <div align="center">
 
-| **강현욱** | **김정희** | **박형규** | **정승원** |
-| :------: |  :------: | :------: | :------: |
-| [<img src="https://avatars.githubusercontent.com/u/155594550?v=4" height=150 width=150> <br/> @kanghyunuk-dev](https://github.com/kanghyunuk-dev) | [<img src="https://avatars.githubusercontent.com/u/144120819?v=4" height=150 width=150> <br/> @kinetas](https://github.com/kinetas) | [<img src="https://avatars.githubusercontent.com/u/263509822?v=4" height=150 width=150> <br/> @parkhyeonggyu15](https://github.com/parkhyeonggyu15) | [<img src="https://avatars.githubusercontent.com/u/127188283?v=4" height=150 width=150> <br/> @jsh340866](https://github.com/jsh340866) |
+<table cellspacing="0" cellpadding="8">
+<tr>
+<th align="center">팀원구성</th>
+<th align="center">담당역할</th>
+</tr>
+<tr>
+<td align="center">
+<img src="https://avatars.githubusercontent.com/u/155594550?v=4" width="100" height="100"><br>
+<b>강현욱</b><br>
+<a href="https://github.com/kanghyunuk-dev">@kanghyunuk-dev</a>
+</td>
+<td>
+<ul>
+<li>팀장 (기획, 총괄)</li>
+<li>로그인/회원가입, 마이페이지 (Spring Security/JWT 인증 체계 설계)</li>
+<li>전역 예외처리 (GlobalExceptionHandler)</li>
+<li>API 문서화 (Swagger 전체 컨트롤러 적용)</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td align="center">
+<img src="https://avatars.githubusercontent.com/u/144120819?v=4" width="100" height="100"><br>
+<b>김정희</b><br>
+<a href="https://github.com/kinetas">@kinetas</a>
+</td>
+<td>
+<ul>
+<li>DB 설계</li>
+<li>투자일지</li>
+<li>MVC 구조의 시스템 아키텍처 설계</li>
+<li>필터링 기반 조회 API 개발</li>
+<li>실시간 시세 연동</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td align="center">
+<img src="https://avatars.githubusercontent.com/u/263509822?v=4" width="100" height="100"><br>
+<b>박형규</b><br>
+<a href="https://github.com/parkhyeonggyu15">@parkhyeonggyu15</a>
+</td>
+<td>
+<ul>
+<li>관심종목</li>
+<li>상세페이지 API 구현 (수익 및 자산 추이, 재무제표 상세)</li>
+<li>금융 뉴스 크롤링</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td align="center">
+<img src="https://avatars.githubusercontent.com/u/127188283?v=4" width="100" height="100"><br>
+<b>정승원</b><br>
+<a href="https://github.com/jsh340866">@jsh340866</a>
+</td>
+<td>
+<ul>
+<li>DB 설계</li>
+<li>외부 API 호출 데이터 수집 파이프라인 설계 및 구현 (DART 재무제표·기업정보, 주가, 지수, 환율)</li>
+<li>투자지표(PER·PBR·ROE·부채비율·모멘텀 등) 계산 및 Piotroski F-Score, TOP100 스코어링 엔진 구현</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td align="center">
+<h1>🤝</h1>
+<b>공통작업</b>
+</td>
+<td>
+<ul>
+<li>인프라 구축/배포 (Docker, Nginx, Jenkins CI/CD)</li>
+</ul>
+</td>
+</tr>
+</table>
 
 </div>
 
