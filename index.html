@@ -404,9 +404,9 @@
 
   /* ============================================ BENTO — 크기·역할이 다른 모듈 */
   .bento{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--space-4);}
-  .bento__wide{grid-column:span 6;}
-  .bento__half{grid-column:span 3;}
-  @media(max-width:900px){.bento__wide,.bento__half{grid-column:span 12;}}
+  .bento__quarter{grid-column:span 3;}
+  @media(max-width:900px){.bento__quarter{grid-column:span 6;}}
+  @media(max-width:640px){.bento__quarter{grid-column:span 12;}}
   .bento .card h3{font-size:var(--text-lg);margin-bottom:var(--space-1);}
   .bento .card .sub{font-size:var(--text-sm);color:var(--color-ink-faint);margin-bottom:var(--space-5);}
   .chips{display:flex;flex-wrap:wrap;gap:var(--space-2);}
@@ -424,6 +424,11 @@
   @media(max-width:520px){.cert-grid{grid-template-columns:minmax(0,1fr);}}
   .cert-card h3{font-size:var(--text-lg);margin:var(--space-3) 0 var(--space-2);}
   .cert-card p{color:var(--color-ink-soft);font-size:var(--text-sm);margin:0;word-break:keep-all;}
+  .cert-top{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);}
+  .cert-date{
+    font-family:var(--font-mono);font-size:var(--text-base);font-weight:600;
+    color:var(--color-ink-faint);white-space:nowrap;
+  }
 
   /* ============================================ PROJECT */
   .project-panel{
@@ -698,11 +703,11 @@
   <section id="stack" class="wrap">
     <div class="section-head reveal">
       <span class="kicker">Tech Stack</span>
-      <h2>사용 기술</h2>
+      <h2>기술 스택</h2>
       <p>ValuePick 프로젝트와 개인 학습을 통해 다뤄본 기술입니다.</p>
     </div>
     <div class="bento reveal">
-      <div class="card bento__wide">
+      <div class="card bento__quarter">
         <h3>Backend</h3>
         <div class="sub">주력 영역</div>
         <div class="chips">
@@ -715,25 +720,33 @@
           <span class="chip"><span class="sw" style="background:#25a162"></span>JUnit5</span>
         </div>
       </div>
-      <div class="card bento__half">
+      <div class="card bento__quarter">
         <h3>Frontend</h3>
         <div class="sub">협업 경험</div>
         <div class="chips">
-          <span class="chip"><span class="sw" style="background:#e34f26"></span>HTML5</span>
-          <span class="chip"><span class="sw" style="background:#1572b6"></span>CSS3</span>
-          <span class="chip"><span class="sw" style="background:#f7df1e"></span>JavaScript</span>
+          <span class="chip"><span class="sw" style="background:#61dafb"></span>React</span>
+          <span class="chip"><span class="sw" style="background:#cc6699"></span>SCSS</span>
         </div>
       </div>
-      <div class="card bento__half">
-        <h3>Infra &amp; Etc</h3>
+      <div class="card bento__quarter">
+        <h3>DevOps</h3>
         <div class="sub">배포 · 협업 도구</div>
         <div class="chips">
-          <span class="chip"><span class="sw" style="background:#2496ed"></span>Docker</span>
-          <span class="chip"><span class="sw" style="background:#009639"></span>NGINX</span>
-          <span class="chip"><span class="sw" style="background:#ff9900"></span>Amazon EC2</span>
           <span class="chip"><span class="sw" style="background:#d24939"></span>Jenkins</span>
-          <span class="chip"><span class="sw" style="background:#003a70"></span>Let's Encrypt</span>
+          <span class="chip"><span class="sw" style="background:#2496ed"></span>Docker</span>
           <span class="chip"><span class="sw" style="background:#f05032"></span>Git</span>
+          <span class="chip"><span class="sw" style="background:#181717"></span>GitHub</span>
+          <span class="chip"><span class="sw" style="background:#2088ff"></span>GitHub Actions</span>
+          <span class="chip"><span class="sw" style="background:#f14e32"></span>Git Flow</span>
+          <span class="chip"><span class="sw" style="background:#0e2f44"></span>Sourcetree</span>
+        </div>
+      </div>
+      <div class="card bento__quarter">
+        <h3>Cloud</h3>
+        <div class="sub">인프라</div>
+        <div class="chips">
+          <span class="chip"><span class="sw" style="background:#ff9900"></span>AWS EC2</span>
+          <span class="chip"><span class="sw" style="background:#ff9900"></span>AWS Certification</span>
         </div>
       </div>
     </div>
@@ -748,7 +761,10 @@
     </div>
     <div class="cert-grid reveal">
       <div class="card cert-card">
-        <span class="label label-brand">취득 완료</span>
+        <div class="cert-top">
+          <span class="label label-brand">취득 완료</span>
+          <span class="cert-date">2026.09</span>
+        </div>
         <h3>정보처리기사</h3>
         <p>국가기술자격 · 정보시스템 개발 전반에 대한 기본 지식 검증</p>
       </div>
