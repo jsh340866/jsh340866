@@ -27,7 +27,7 @@
   <img src="https://img.shields.io/badge/Spring%20Security-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white">
   <img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white">
   <img src="https://img.shields.io/badge/JPA%2FHibernate-59666C?style=for-the-badge&logo=Hibernate&logoColor=white">
-  <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=MySQL&logoColor=white">
+  <img src="https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white">
   <img src="https://img.shields.io/badge/JUnit5-25A162?style=for-the-badge&logo=junit5&logoColor=white">
 </div>
 
@@ -36,16 +36,25 @@
   <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white">
   <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white">
   <img src="https://img.shields.io/badge/Javascript-F7DF1E?style=for-the-badge&logo=Javascript&logoColor=white">
+  <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=white">
+  <img src="https://img.shields.io/badge/SCSS-CC6699?style=for-the-badge&logo=sass&logoColor=white">
 </div>
 
-**Infra & Etc**
+**DevOps**
 <div align="center">
-  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white">
-  <img src="https://img.shields.io/badge/NGINX-009639?style=for-the-badge&logo=nginx&logoColor=white">
-  <img src="https://img.shields.io/badge/Amazon%20EC2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=white">
   <img src="https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=jenkins&logoColor=white">
-  <img src="https://img.shields.io/badge/Let%27s%20Encrypt-003A70?style=for-the-badge&logo=letsencrypt&logoColor=white">
+  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white">
   <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=Git&logoColor=white">
+  <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white">
+  <img src="https://img.shields.io/badge/GitHub%20Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white">
+  <img src="https://img.shields.io/badge/Git%20Flow-F14E32?style=for-the-badge&logo=git&logoColor=white">
+  <img src="https://img.shields.io/badge/Sourcetree-0E2F44?style=for-the-badge&logo=sourcetree&logoColor=white">
+</div>
+
+**Cloud**
+<div align="center">
+  <img src="https://img.shields.io/badge/Amazon%20EC2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=white">
+  <img src="https://img.shields.io/badge/Route53-FF9900?style=for-the-badge&logo=amazonroute53&logoColor=white">
 </div>
 
 **Data Engineering**
@@ -61,13 +70,9 @@
 
 ## 📌 Projects
 
-### valuepick — 주식/재무 데이터 분석 백엔드
+### valuepick — 주식/재무 데이터 분석 백엔드 &nbsp;<a href="https://github.com/project-valuepick/valuepick"><img src="https://img.shields.io/badge/GitHub%20Repo-181717?style=flat-square&logo=github&logoColor=white" valign="middle"></a>
 
 Spring Boot 기반으로 국내 주식·재무 데이터를 수집하고 분석하는 백엔드 프로젝트입니다.
-
-<a href="https://github.com/project-valuepick/valuepick">
-  <img src="https://img.shields.io/badge/GitHub%20Repo-181717?style=flat-square&logo=github&logoColor=white">
-</a>
 
 - **DB 설계**: MySQL(investdb) 기반 스키마 설계 — 기업·주가·재무·지표·배당·환율·지수 도메인 간 관계 정의, 일별 시세/지표 대량 적재를 고려한 테이블 구성
 - **외부 API 연동**: DART(재무제표·공시), 공공데이터포털(주가, XML 파싱), 한국수출입은행(환율), KRX(상장사 정보)를 RestTemplate으로 연동
@@ -76,13 +81,11 @@ Spring Boot 기반으로 국내 주식·재무 데이터를 수집하고 분석�
 - **아키텍처**: JPA Repository + Service 계층 구조
 - **핵심 도메인**: Company, StockPrice, StockIndicator, FinancialStatement, DividendInfo, Exchange, Top100, MarketIndex
 
-### Apache-Spark — ValuePick 추천 로직 검증 (개인 프로젝트)
+<br>
+
+### Apache-Spark — ValuePick 추천 로직 검증 (개인 프로젝트) &nbsp;<a href="https://github.com/jsh340866/Apache-Spark"><img src="https://img.shields.io/badge/GitHub%20Repo-181717?style=flat-square&logo=github&logoColor=white" valign="middle"></a>
 
 valuepick 서비스가 운영 중인 종목 추천 로직이 실제로 수익을 냈는지, Apache Spark로 2021~2023년 실제 데이터 기준 21,870개 전략을 동시에 백테스트해 검증했습니다.
-
-<a href="https://github.com/jsh340866/Apache-Spark">
-  <img src="https://img.shields.io/badge/GitHub%20Repo-181717?style=flat-square&logo=github&logoColor=white">
-</a>
 
 - **분산 처리**: PySpark 기반 5단계 파이프라인(원천 수집 → 시세 정제 → 지표 계산 → 백테스트 → MySQL 서빙), 잡 간 데이터 전달은 Parquet
 - **그리드 탐색**: 가중치 프리셋 2,187개 × 리밸런싱 주기 2개 × 보유종목수 5개 = 21,870개 전략을 crossJoin+Window로 벡터화해 동시 처리
