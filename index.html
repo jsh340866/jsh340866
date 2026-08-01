@@ -284,6 +284,12 @@
   }
   .label-brand{background:var(--color-brand-soft);color:var(--color-brand);}
   .label-muted{background:var(--color-surface-sunken);color:var(--color-ink-faint);}
+  /* 팀/개인 프로젝트 구분 — 한눈에 갈리도록 색 자체를 다르게 */
+  .label-team{background:var(--color-brand-soft);color:var(--color-brand);}
+  .label-solo{
+    background:color-mix(in srgb, var(--color-accent) 12%, transparent);
+    color:var(--color-accent);
+  }
 
   /* ============================================ HERO
      브랜드 · 한 줄 헤드 · 짧은 문장 · CTA 묶음
@@ -405,8 +411,22 @@
   /* ============================================ BENTO — 크기·역할이 다른 모듈 */
   .bento{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--space-4);}
   .bento__quarter{grid-column:span 3;}
-  @media(max-width:900px){.bento__quarter{grid-column:span 6;}}
-  @media(max-width:640px){.bento__quarter{grid-column:span 12;}}
+  /* 카드가 5장(Data Engineering 추가)이라 12칸 grid를 4등분하면 마지막 한 장이
+     혼자 다음 줄에 남는다. Stack 섹션만 5열로 다시 깔아 균등 배치 */
+  #stack .bento{grid-template-columns:repeat(5,1fr);}
+  #stack .bento__quarter{grid-column:span 1;}
+  @media(max-width:1100px){
+    #stack .bento{grid-template-columns:repeat(3,1fr);}
+  }
+  @media(max-width:900px){
+    .bento__quarter{grid-column:span 6;}
+    #stack .bento{grid-template-columns:repeat(2,1fr);}
+    #stack .bento__quarter{grid-column:span 1;}
+  }
+  @media(max-width:640px){
+    .bento__quarter{grid-column:span 12;}
+    #stack .bento{grid-template-columns:1fr;}
+  }
   .bento .card h3{font-size:var(--text-lg);margin-bottom:var(--space-1);}
   .bento .card .sub{font-size:var(--text-sm);color:var(--color-ink-faint);margin-bottom:var(--space-5);}
   .chips{display:flex;flex-wrap:wrap;gap:var(--space-2);}
@@ -439,6 +459,11 @@
   .project-panel h3{font-size:var(--text-xl);margin:var(--space-3) 0 var(--space-4);word-break:keep-all;}
   .project-panel .desc{color:var(--color-ink-soft);max-width:72ch;margin:0 0 var(--space-5);word-break:keep-all;}
   .project-links{display:flex;gap:var(--space-3);flex-wrap:wrap;margin-bottom:var(--space-6);}
+  /* 탭 패널 안 소제목 — 아키텍처 / 주요 기능 / 트러블슈팅 구분용 */
+  .panel-title{
+    font-size:var(--text-xl);margin:var(--space-8) 0 var(--space-4);
+    padding-bottom:var(--space-3);border-bottom:1px solid var(--color-border);
+  }
 
   .role-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-4);}
   @media(max-width:760px){.role-grid{grid-template-columns:1fr;}}
@@ -554,6 +579,90 @@
     background:var(--color-brand-soft);color:var(--color-brand);
     font-size:var(--text-sm);font-weight:600;word-break:keep-all;
   }
+
+  /* ============================================ CAROUSEL — 분석 결과 차트 가로 넘김
+     scroll-snap이라 모바일에선 스와이프, 데스크톱에선 화살표 버튼으로 이동 */
+  .carousel{position:relative;}
+  /* 트랙 좌우 음수 마진 + 슬라이드 패딩으로 카드 간격을 만든다.
+     gap을 쓰면 slide 폭 50% 계산이 어긋나 스크롤 스냅이 밀림 */
+  .carousel-track{
+    display:flex;overflow-x:auto;
+    scroll-snap-type:x mandatory;scroll-behavior:smooth;
+    scrollbar-width:none;margin:0 calc(-1 * var(--space-2));
+  }
+  .carousel-track::-webkit-scrollbar{display:none;}
+  .carousel-slide{
+    flex:0 0 50%;min-width:0;
+    padding:0 var(--space-2);scroll-snap-align:start;
+  }
+  @media(max-width:760px){
+    .carousel-slide{flex:0 0 100%;}
+  }
+  .slide-card{
+    height:100%;display:flex;flex-direction:column;
+    border:1px solid var(--color-border);border-radius:var(--radius-lg);
+    background:var(--color-surface);overflow:hidden;
+  }
+  /* 차트마다 원본 비율이 달라 높이를 묶고 contain으로 가운데 정렬 */
+  .slide-card img{
+    width:100%;height:min(68vh, 620px);object-fit:contain;
+    background:var(--color-surface-sunken);
+    border-bottom:1px solid var(--color-border);
+    padding:var(--space-3);
+  }
+  .slide-body{padding:var(--space-4) var(--space-5);}
+  .slide-body h4{font-size:var(--text-base);margin-bottom:var(--space-2);word-break:keep-all;}
+  .slide-body p{
+    margin:0;font-size:var(--text-sm);color:var(--color-ink-soft);
+    word-break:keep-all;
+  }
+  /* 좌우 오버레이 화살표 — 이미지 영역 세로 중앙에 맞춰 띄운다
+     (카드 전체 기준으로 잡으면 설명 텍스트 쪽으로 내려감) */
+  .carousel-btn{
+    position:absolute;top:calc(min(68vh, 620px) / 2);transform:translateY(-50%);
+    z-index:2;width:44px;height:44px;border-radius:50%;
+    border:1px solid var(--color-border);background:var(--color-surface);
+    color:var(--color-ink);cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:var(--shadow-soft);
+    opacity:0;transition:opacity .18s ease, background .15s ease;
+  }
+  .carousel-btn[data-dir="-1"]{left:var(--space-4);}
+  .carousel-btn[data-dir="1"]{right:var(--space-4);}
+  .carousel-btn:hover{background:var(--color-surface-sunken);}
+  .carousel-btn svg{width:18px;height:18px;}
+  /* 마우스가 있는 환경에서만 호버로 노출 */
+  @media (hover: hover){
+    .carousel:hover .carousel-btn,
+    .carousel-btn:focus-visible{opacity:1;}
+  }
+  /* 터치 기기엔 호버가 없으니 항상 보이게 */
+  @media (hover: none){
+    .carousel-btn{opacity:1;}
+  }
+
+  /* ============================================ LIGHTBOX — 차트/다이어그램 원본 확대
+     native <dialog>라 ESC 닫기·포커스 처리는 브라우저가 담당 */
+  .zoomable{cursor:zoom-in;}
+  .lightbox{
+    border:none;padding:0;background:transparent;
+    max-width:96vw;max-height:96vh;overflow:visible;
+  }
+  .lightbox::backdrop{background:rgba(0,0,0,.82);}
+  .lightbox img{
+    max-width:96vw;max-height:96vh;
+    object-fit:contain;display:block;
+    border-radius:var(--radius-md);background:#fff;
+  }
+  .lightbox-close{
+    position:fixed;top:16px;right:16px;
+    width:44px;height:44px;border-radius:var(--radius-sm);
+    border:1px solid rgba(255,255,255,.25);
+    background:rgba(0,0,0,.55);color:#fff;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .lightbox-close:hover{background:rgba(0,0,0,.75);}
+  .lightbox-close svg{width:20px;height:20px;}
 
   /* ============================================ MOBILE STRIP */
   .mobile-strip{display:flex;gap:var(--space-5);overflow-x:auto;padding-bottom:var(--space-4);}
@@ -673,7 +782,7 @@
     <div class="about-grid">
       <div class="card about-bio reveal">
         <p>데이터가 안정적으로 쌓이고, 그 위에서 서비스가 매일 같은 시간에 정확히 돌아가는 것을 가장 중요하게 생각합니다. 눈에 띄는 기능보다 <strong>실패해도 다시 도는 배치</strong>와 다음 사람이 읽기 좋은 코드에 더 신경 쓰는 백엔드 개발자입니다.</p>
-        <p>국비 풀스택 개발자 과정에 등록해 Java/Spring 기반 백엔드를 중심으로 학습하며 4인 팀 프로젝트 <strong>ValuePick</strong>에서 외부 데이터 수집 파이프라인과 스코어링 엔진을 담당했습니다.</p>
+        <p>국비 풀스택 개발자 과정에 등록해 Java/Spring 기반 백엔드를 중심으로 학습하며 4인 팀 프로젝트 <strong>ValuePick</strong>에서 외부 데이터 수집 파이프라인과 스코어링 엔진을 담당했습니다. 이후 "내가 만든 추천 로직이 실제로 수익을 냈을까"가 궁금해, 팀 프로젝트가 끝난 뒤 <strong>Apache Spark로 21,870개 전략을 백테스트해 직접 검증</strong>하는 개인 프로젝트를 이어서 진행했습니다.</p>
         <p>외부 API 스펙이나 동작 방식은 문서나 추측이 아니라 <strong>실제로 호출한 응답</strong>으로 확인한 뒤에만 코드에 반영합니다. DART 계정명 매칭 버그를 표준 코드(<code>account_id</code>) 기반으로 근본 해결한 것도 이런 원칙에서 나온 결과였습니다.</p>
         <div class="motto">"필요한 사람이 되자" — 눈에 띄지 않아도 팀에 필요한 일을 먼저 찾아서 합니다.</div>
         <div class="timeline">
@@ -685,7 +794,7 @@
       <div class="trait-list reveal">
         <div class="trait">
           <div class="t-label">Strength</div>
-          <p>낯선 기술도 문서를 직접 파고들고 실제로 호출·실행해 확인하며 빠르게 적응합니다. 새 기술 스택의 핵심을 빠르게 파악해 바로 프로젝트에 적용합니다.</p>
+          <p>낯선 기술도 문서를 직접 파고들고 실제로 호출·실행해 확인하며 적응합니다. 팀 프로젝트가 끝난 뒤 혼자 Spark를 붙잡고 분산 처리를 익힌 것도, 막힐 때마다 로그와 실행계획을 직접 열어보며 하나씩 확인한 결과입니다.</p>
         </div>
         <div class="trait">
           <div class="t-label">Approach</div>
@@ -753,6 +862,17 @@
           <span class="chip"><span class="sw" style="background:#ff9900"></span>AWS Certification</span>
         </div>
       </div>
+      <div class="card bento__quarter">
+        <h3>Data Engineering</h3>
+        <div class="sub">Spark 백테스팅 프로젝트</div>
+        <div class="chips">
+          <span class="chip"><span class="sw" style="background:#e25a1c"></span>Apache Spark</span>
+          <span class="chip"><span class="sw" style="background:#3776ab"></span>PySpark</span>
+          <span class="chip"><span class="sw" style="background:#50abf1"></span>Apache Parquet</span>
+          <span class="chip"><span class="sw" style="background:#f37626"></span>Jupyter</span>
+          <span class="chip"><span class="sw" style="background:#150458"></span>pandas</span>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -788,193 +908,383 @@
   <!-- PROJECT -->
   <section id="project" class="wrap">
     <div class="section-head reveal">
-      <span class="kicker">Featured Project</span>
-      <h2>ValuePick</h2>
-      <p>가치투자 지표 기반 종목 스크리닝 서비스 — 4인 팀 프로젝트, 1차 배포 완료</p>
+      <span class="kicker">Project</span>
+      <h2>프로젝트</h2>
+      <p>탭을 눌러 프로젝트를 전환할 수 있습니다.</p>
     </div>
 
-    <div class="metric-grid reveal">
-      <div class="metric">
-        <div class="num">4</div>
-        <div class="label-txt">외부 API 연동 (DART·KRX·공공데이터·수출입은행)</div>
+    <div class="tab-list reveal" id="projectTabList">
+      <button class="tab-btn active" type="button" aria-pressed="true" data-project="proj-valuepick">ValuePick</button>
+      <button class="tab-btn" type="button" aria-pressed="false" data-project="proj-spark">Spark 백테스팅</button>
+    </div>
+
+    <!-- ValuePick -->
+    <div class="project-tab-panel" id="proj-valuepick">
+      <div class="metric-grid reveal">
+        <div class="metric">
+          <div class="num">4</div>
+          <div class="label-txt">외부 API 연동 (DART·KRX·공공데이터·수출입은행)</div>
+        </div>
+        <div class="metric">
+          <div class="num">2,700 → 1</div>
+          <div class="label-txt">주가 수집 API 호출 최적화</div>
+        </div>
+        <div class="metric">
+          <div class="num">2,559</div>
+          <div class="label-txt">일 단위 자동 수집 대상 상장기업 수</div>
+        </div>
+        <div class="metric">
+          <div class="num">8</div>
+          <div class="label-txt">문서화된 트러블슈팅 &amp; 기술적 의사결정</div>
+        </div>
       </div>
-      <div class="metric">
-        <div class="num">2,700 → 1</div>
-        <div class="label-txt">주가 수집 API 호출 최적화</div>
+
+      <div class="project-panel reveal">
+        <span class="label label-team">TEAM PROJECT · 4인 · 2026</span>
+        <h3>DART·KRX·환율 데이터를 매일 자동 수집해 저평가 우량주 TOP100을 추천하는 서비스</h3>
+        <p class="desc">DART 재무제표, 공공데이터포털 주가, KRX 지수, 한국수출입은행 환율을 매일 새벽 자동 수집해 PER·PBR·ROE·Piotroski F-Score 등 투자지표를 계산하고, 멀티팩터 가중 스코어링으로 저평가 우량주 TOP100을 추천합니다. 개인 투자일지(매수/매도 기록, 손익 관리) 기능도 함께 제공합니다.</p>
+        <div class="project-links">
+          <a class="btn btn-primary" href="https://www.valuepick.cloud" target="_blank" rel="noopener">서비스 바로가기</a>
+          <a class="btn btn-secondary" href="https://github.com/project-valuepick/valuepick" target="_blank" rel="noopener">GitHub Repo</a>
+          <a class="btn btn-secondary" href="https://project-valuepick.github.io/valuepick/erd.html" target="_blank" rel="noopener">ERD 상세보기</a>
+        </div>
+
+        <div class="role-grid">
+          <div class="role-item">
+            <span class="num">01 · 담당 영역</span>
+            <h4>외부 데이터 수집 파이프라인</h4>
+            <p>KRX(상장종목)·DART(전자공시)·한국수출입은행(환율) 3종 API를 조인해 기업정보 → 재무제표 → 환율 순으로 수집하는 일일 배치 파이프라인 설계 및 구현</p>
+          </div>
+          <div class="role-item">
+            <span class="num">02 · API 호출 최적화</span>
+            <h4>주가 수집 2,700회 → 1회</h4>
+            <p>종목별 개별 호출 구조를, 문서 재확인 후 필수 아니던 필터 파라미터를 제거해 날짜 기준 전 종목 일괄 조회로 전환. 일일 호출 한도 초과 문제를 근본 해결</p>
+          </div>
+          <div class="role-item">
+            <span class="num">03 · 데이터 정합성</span>
+            <h4>표준 계정 코드 기반 재무 매칭</h4>
+            <p>"영업이익"/"영업이익(손실)"처럼 회사마다 다른 계정명 표기 때문에 값이 0으로 누락되던 문제를, DART 표준 코드(account_id) 매칭으로 근본 해결</p>
+          </div>
+          <div class="role-item">
+            <span class="num">04 · 스코어링 엔진</span>
+            <h4>투자지표 &amp; TOP100 스코어링</h4>
+            <p>EPS·PER·PBR·ROE·부채비율·모멘텀 등 투자지표와 Piotroski F-Score를 계산하고, 지표별 백분위로 정규화한 다팩터 가중 스코어링으로 TOP100 산출</p>
+          </div>
+        </div>
       </div>
-      <div class="metric">
-        <div class="num">2,559</div>
-        <div class="label-txt">일 단위 자동 수집 대상 상장기업 수</div>
+
+      <h3 class="panel-title reveal">아키텍처</h3>
+      <div class="arch-grid reveal">
+        <div class="arch-card">
+          <img src="assets/img/system-architecture.png" alt="스케줄러가 4종 외부 API를 순차 수집해 MySQL 적재 후 지표 계산과 TOP100 스코어링까지 도는 일일 배치 흐름 다이어그램" loading="lazy">
+          <div class="cap"><span>시스템 아키텍처</span><a href="https://project-valuepick.github.io/valuepick/시스템%20아키텍쳐.html" target="_blank" rel="noopener">상세보기</a></div>
+          <p class="arch-desc">스케줄러가 4종 외부 API를 순차 수집 → MySQL 적재 → 지표 계산 → TOP100 스코어링까지의 일일 배치 흐름</p>
+        </div>
+        <div class="arch-card">
+          <img src="assets/img/tech-architecture.png" alt="Spring Boot 백엔드, MySQL, NGINX, Docker, EC2, Jenkins로 구성된 배포·운영 기술 스택 구성도" loading="lazy">
+          <div class="cap"><span>기술 아키텍처</span><a href="https://project-valuepick.github.io/valuepick/기술%20아키텍쳐.html" target="_blank" rel="noopener">상세보기</a></div>
+          <p class="arch-desc">Spring Boot·MySQL 기반 애플리케이션을 Docker로 컨테이너화하고 NGINX·Jenkins·EC2로 배포·운영하는 인프라 구성</p>
+        </div>
       </div>
-      <div class="metric">
-        <div class="num">8</div>
-        <div class="label-txt">문서화된 트러블슈팅 &amp; 기술적 의사결정</div>
+
+      <h3 class="panel-title reveal">주요 기능</h3>
+      <div class="reveal">
+        <div class="tab-list" id="tabList">
+          <button class="tab-btn active" type="button" aria-pressed="true" data-src="assets/demo/home.gif" data-cap="홈 · 코스피 지수/환율 위젯, TOP10, 4대 랭킹 — 10초 주기 실시간 갱신">홈 화면</button>
+          <button class="tab-btn" type="button" aria-pressed="false" data-src="assets/demo/screening.gif" data-cap="종목 리스트 · PER/PBR/ROE/배당수익률 필터, 정렬, 페이징, 종목명 검색">종목 스크리닝</button>
+          <button class="tab-btn" type="button" aria-pressed="false" data-src="assets/demo/detail.gif" data-cap="종목 상세 · 재무제표 연도별 추이, 투자지표, 관련 뉴스, Canvas 차트">종목 상세</button>
+          <button class="tab-btn" type="button" aria-pressed="false" data-src="assets/demo/top100.gif" data-cap="TOP100 랭킹 · Piotroski F-Score + 7개 팩터 가중 스코어링 결과">TOP100 랭킹</button>
+          <button class="tab-btn" type="button" aria-pressed="false" data-src="assets/demo/login.gif" data-cap="JWT(Access/Refresh) 기반 회원가입 · 로그인 · 토큰 재발급">로그인</button>
+          <button class="tab-btn" type="button" aria-pressed="false" data-src="assets/demo/mypage.gif" data-cap="마이페이지 · 닉네임/비밀번호 변경, 회원탈퇴(soft delete, 30일 유예)">마이페이지</button>
+          <button class="tab-btn" type="button" aria-pressed="false" data-src="assets/demo/favorite.gif" data-cap="관심종목 등록 / 해제">관심종목</button>
+          <button class="tab-btn" type="button" aria-pressed="false" data-src="assets/demo/invest.gif" data-cap="투자일지 · 종목별 매수/매도 기록, 보유/완료 상태 관리, 손익 메모">투자일지</button>
+        </div>
+        <div class="media-frame">
+          <img id="featureImg" src="assets/demo/home.gif" alt="ValuePick 홈 화면 데모">
+        </div>
+        <p class="media-cap" id="featureCap">홈 · 코스피 지수/환율 위젯, TOP10, 4대 랭킹 — 10초 주기 실시간 갱신</p>
+      </div>
+
+      <h3 class="panel-title reveal">트러블슈팅</h3>
+      <p class="ts-hint reveal">4인 팀 프로젝트 중 제가 담당한 데이터 수집·스코어링 영역에서 직접 해결한 문제입니다. 각 항목을 눌러 상세(Problem · Approach · 결과)를 펼쳐볼 수 있습니다.</p>
+      <div class="ts-grid reveal">
+        <details class="ts-card">
+          <summary><span class="label label-muted">ISSUE 01</span><h4>TOP100 스코어링 N+1 문제</h4></summary>
+          <div class="ts-body">
+            <div class="ts-block"><div class="lbl">Problem</div><p>전체 지표를 순회하며 각 종목의 corpCls·indutyCode를 읽어야 했는데, StockIndicator.company가 지연 로딩(LAZY)이라 지표 건수만큼 추가 SELECT가 나갔음</p></div>
+            <div class="ts-block"><div class="lbl">Approach</div><p>스코어링용 조회 쿼리를 JOIN FETCH로 재작성해 StockIndicator와 Company를 한 번에 로딩하도록 변경</p></div>
+            <div class="ts-result">결과: 지표 건수만큼 발생하던 추가 SELECT를 제거해, 전체 종목 스코어링을 단일 쿼리로 처리</div>
+          </div>
+        </details>
+        <details class="ts-card">
+          <summary><span class="label label-muted">ISSUE 02</span><h4>DART 수집 전용 비동기 스레드풀 분리</h4></summary>
+          <div class="ts-body">
+            <div class="ts-block"><div class="lbl">Problem</div><p>성격이 다른 주가 수집과 DART 수집(재무·기업·배당)을 한 스레드풀로 처리하면, 오래 걸리는 쪽 때문에 다른 작업까지 큐에서 밀릴 수 있었음</p></div>
+            <div class="ts-block"><div class="lbl">Approach</div><p>dartExecutor(core 8 / max 15 / queue 100)를 별도로 만들고 DART 수집기 3곳에 @Async("dartExecutor")를 적용, 큐를 크게 잡아 수천 건도 거절되지 않게 함</p></div>
+            <div class="ts-result">결과: 두 수집 작업이 서로 지연시키지 않고 독립 실행</div>
+          </div>
+        </details>
+        <details class="ts-card">
+          <summary><span class="label label-muted">ISSUE 03</span><h4>스코어 — 원값이 아닌 백분위로 정규화</h4></summary>
+          <div class="ts-body">
+            <div class="ts-block"><div class="lbl">Problem</div><p>PER은 배수, ROE는 %, 모멘텀은 수익률 등 지표마다 단위·스케일이 달라, 원값을 그대로 가중합하면 스케일이 큰 지표가 점수를 지배함</p></div>
+            <div class="ts-block"><div class="lbl">Approach</div><p>지표별 순위를 매겨 0~1 백분위로 변환한 뒤 가중치를 곱하도록 변경. null은 지표 유·불리에 따라 항상 최하위로 취급되게 처리</p></div>
+            <div class="ts-result">결과: 스케일 왜곡 없이 지표 간 공정한 가중 합산</div>
+          </div>
+        </details>
+        <details class="ts-card">
+          <summary><span class="label label-muted">ISSUE 04</span><h4>금융업 F-Score 예외 처리</h4></summary>
+          <div class="ts-body">
+            <div class="ts-block"><div class="lbl">Problem</div><p>F-Score는 유동비율·매출총이익률처럼 제조업 재무구조를 전제한 항목이 섞여 있어 금융업에는 구조적으로 맞지 않음</p></div>
+            <div class="ts-block"><div class="lbl">Approach</div><p>induty_code 앞 2자리(64/65/66)로 금융업을 판별해 F-Score 계산을 건너뛰고 TOP100 필터도 조건 없이 통과. 업종코드 미수집 종목은 후보에서 제외해 부당 탈락 방지</p></div>
+            <div class="ts-result">결과: 업종 특성에 맞는 스코어링, 오분류로 인한 탈락 차단</div>
+          </div>
+        </details>
+        <details class="ts-card">
+          <summary><span class="label label-muted">ISSUE 05</span><h4>DART 대량 수집 — 배치·간격·재시도</h4></summary>
+          <div class="ts-body">
+            <div class="ts-block"><div class="lbl">Problem</div><p>전체 상장사 재무제표를 수집하면서 API 과호출, 일시적 요청 실패, 중복 저장을 모두 감당해야 했음</p></div>
+            <div class="ts-block"><div class="lbl">Approach</div><p>100건 단위 페이징 순차 처리 + 회사당 sleep 100ms로 호출 속도 조절, CFS 실패 시 OFS로 재조회, HTTP 실패는 간격을 늘려가며 최대 3회 재시도, 기존 연도 데이터 존재 확인으로 중복 저장 차단</p></div>
+            <div class="ts-result">결과: 대량 수집 안정화, 과호출·중복 저장 방지</div>
+          </div>
+        </details>
+        <details class="ts-card">
+          <summary><span class="label label-muted">ISSUE 06</span><h4>스케줄러 파이프라인 순서 보장</h4></summary>
+          <div class="ts-body">
+            <div class="ts-block"><div class="lbl">Problem</div><p>주가 → 지표 계산 → TOP100은 앞 단계 결과에 의존하는 순차 파이프라인인데, @Scheduled는 각자 독립 트리거라 순서를 강제할 방법이 마땅치 않았음</p></div>
+            <div class="ts-block"><div class="lbl">Approach</div><p>cron 분(minute) 값을 의도적으로 어긋나게 배치(환율 01:00 → 주가 01:20 → 지표 01:50 → TOP100 02:00), 삭제 작업도 시차를 둬 앞 단계 완료 시간을 확보. 단, 코스피 지수 수집(MarketIndexScheduler)은 01:10에 뒀을 때 KRX 데이터가 아직 확정되지 않아 IllegalStateException으로 매번 실패했기에, 확정 시각(08:00 전후)을 확인하고 파이프라인에서 떼어내 08:30에 독립 실행</p></div>
+            <div class="ts-result">결과: 별도 오케스트레이터 없이 단계 순서 보장, 지수 수집 실패도 제거</div>
+          </div>
+        </details>
+        <details class="ts-card">
+          <summary><span class="label label-muted">ISSUE 07</span><h4>환율 API 빈 응답을 휴일 신호로 재활용</h4></summary>
+          <div class="ts-body">
+            <div class="ts-block"><div class="lbl">Problem</div><p>한국수출입은행 환율 API는 주말·공휴일에 별도 플래그 없이 빈 배열만 반환해, 캘린더만으로는 "가장 최근 영업일"을 판단할 수 없었음</p></div>
+            <div class="ts-block"><div class="lbl">Approach</div><p>빈 응답이면 예외를 던지고, 이를 캐치해 하루씩 거슬러 올라가며 재탐색(최대 10일). DB에 저장된 날짜가 있으면 API를 재호출하지 않고 재사용</p></div>
+            <div class="ts-result">결과: 별도 공휴일 달력 없이 전일 대비 변동률 정확 계산</div>
+          </div>
+        </details>
+        <details class="ts-card">
+          <summary><span class="label label-muted">ISSUE 08</span><h4>종목명 필터링 — 법령 근거로 매칭 구분</h4></summary>
+          <div class="ts-body">
+            <div class="ts-block"><div class="lbl">Problem</div><p>리츠·스팩을 contains로만 걸러내면 "메리츠"·"블리츠" 같은 무관한 종목까지 오탐돼 화이트리스트를 하드코딩해야 했음</p></div>
+            <div class="ts-block"><div class="lbl">Approach</div><p>부동산투자회사법상 리츠는 상호 끝에 "리츠"를 붙이므로 endsWith("리츠"), 자본시장법상 스팩은 상호 어디든 "스팩"이 들어가므로 contains("스팩")로 구분 적용</p></div>
+            <div class="ts-result">결과: 하드코딩 화이트리스트 제거, 신규 상장 종목도 코드 수정 없이 자동 분류</div>
+          </div>
+        </details>
+      </div>
+
+      <h3 class="panel-title reveal">모바일 화면</h3>
+      <p class="ts-hint reveal">반응형으로 모바일 환경에서도 동일한 기능을 제공합니다. 이미지를 누르면 원본이 열립니다.</p>
+      <div class="mobile-strip reveal">
+        <a class="phone" href="assets/img/responsive-home.png" target="_blank" rel="noopener"><img src="assets/img/responsive-home.png" alt="홈 화면 모바일 레이아웃" loading="lazy"></a>
+        <a class="phone" href="assets/img/responsive-list.png" target="_blank" rel="noopener"><img src="assets/img/responsive-list.png" alt="종목 목록 모바일 레이아웃" loading="lazy"></a>
+        <a class="phone" href="assets/img/responsive-rank.png" target="_blank" rel="noopener"><img src="assets/img/responsive-rank.png" alt="TOP100 랭킹 모바일 레이아웃" loading="lazy"></a>
+        <a class="phone" href="assets/img/responsive-journal.png" target="_blank" rel="noopener"><img src="assets/img/responsive-journal.png" alt="투자일지 모바일 레이아웃" loading="lazy"></a>
+        <a class="phone" href="assets/img/responsive-favorite.png" target="_blank" rel="noopener"><img src="assets/img/responsive-favorite.png" alt="관심종목 모바일 레이아웃" loading="lazy"></a>
+        <a class="phone" href="assets/img/responsive-mypage.png" target="_blank" rel="noopener"><img src="assets/img/responsive-mypage.png" alt="마이페이지 모바일 레이아웃" loading="lazy"></a>
       </div>
     </div>
 
-    <div class="project-panel reveal">
-      <span class="label label-brand">TEAM PROJECT · 2026</span>
-      <h3>DART·KRX·환율 데이터를 매일 자동 수집해 저평가 우량주 TOP100을 추천하는 서비스</h3>
-      <p class="desc">DART 재무제표, 공공데이터포털 주가, KRX 지수, 한국수출입은행 환율을 매일 새벽 자동 수집해 PER·PBR·ROE·Piotroski F-Score 등 투자지표를 계산하고, 멀티팩터 가중 스코어링으로 저평가 우량주 TOP100을 추천합니다. 개인 투자일지(매수/매도 기록, 손익 관리) 기능도 함께 제공합니다.</p>
-      <div class="project-links">
-        <a class="btn btn-primary" href="https://www.valuepick.cloud" target="_blank" rel="noopener">서비스 바로가기</a>
-        <a class="btn btn-secondary" href="https://github.com/project-valuepick/valuepick" target="_blank" rel="noopener">GitHub Repo</a>
-        <a class="btn btn-secondary" href="https://project-valuepick.github.io/valuepick/erd.html" target="_blank" rel="noopener">ERD 상세보기</a>
+    <!-- Spark 백테스팅 -->
+    <div class="project-tab-panel" id="proj-spark" style="display:none">
+      <div class="metric-grid reveal">
+        <div class="metric">
+          <div class="num">21,870</div>
+          <div class="label-txt">동시 백테스트한 전략 조합 수</div>
+        </div>
+        <div class="metric">
+          <div class="num">87%</div>
+          <div class="label-txt">KOSPI 단독이 전체 시장보다 성과 좋았던 전략 비율</div>
+        </div>
+        <div class="metric">
+          <div class="num">277GB</div>
+          <div class="label-txt">셔플 파티션 고정값 탓에 실측된 메모리 스필</div>
+        </div>
+        <div class="metric">
+          <div class="num">9건</div>
+          <div class="label-txt">분산처리 환경에서 실제로 부딪힌 트러블슈팅</div>
+        </div>
       </div>
 
-      <div class="role-grid">
-        <div class="role-item">
-          <span class="num">01 · 담당 영역</span>
-          <h4>외부 데이터 수집 파이프라인</h4>
-          <p>KRX(상장종목)·DART(전자공시)·한국수출입은행(환율) 3종 API를 조인해 기업정보 → 재무제표 → 환율 순으로 수집하는 일일 배치 파이프라인 설계 및 구현</p>
+      <div class="project-panel reveal">
+        <span class="label label-solo">SOLO PROJECT · 개인 · 2026</span>
+        <h3>ValuePick 추천 로직, 과거 데이터로 되짚어보니 실제로 이득이었을까</h3>
+        <p class="desc">ValuePick의 종목 추천 로직이 실제로 수익을 냈는지 궁금해서, Apache Spark로 21,870개 전략을 동시에 백테스트해 검증했습니다. Spark를 처음 다뤄보며 학습 중에 진행한 프로젝트라 모든 걸 완벽히 이해했다고는 말할 수 없지만, 부딪힌 문제와 실측 결과는 아래에 정리했습니다.</p>
+        <div class="project-links">
+          <a class="btn btn-secondary" href="https://github.com/jsh340866/Apache-Spark" target="_blank" rel="noopener">GitHub Repo</a>
         </div>
-        <div class="role-item">
-          <span class="num">02 · API 호출 최적화</span>
-          <h4>주가 수집 2,700회 → 1회</h4>
-          <p>종목별 개별 호출 구조를, 문서 재확인 후 필수 아니던 필터 파라미터를 제거해 날짜 기준 전 종목 일괄 조회로 전환. 일일 호출 한도 초과 문제를 근본 해결</p>
-        </div>
-        <div class="role-item">
-          <span class="num">03 · 데이터 정합성</span>
-          <h4>표준 계정 코드 기반 재무 매칭</h4>
-          <p>"영업이익"/"영업이익(손실)"처럼 회사마다 다른 계정명 표기 때문에 값이 0으로 누락되던 문제를, DART 표준 코드(account_id) 매칭으로 근본 해결</p>
-        </div>
-        <div class="role-item">
-          <span class="num">04 · 스코어링 엔진</span>
-          <h4>투자지표 &amp; TOP100 스코어링</h4>
-          <p>EPS·PER·PBR·ROE·부채비율·모멘텀 등 투자지표와 Piotroski F-Score를 계산하고, 지표별 백분위로 정규화한 다팩터 가중 스코어링으로 TOP100 산출</p>
-        </div>
-      </div>
-    </div>
 
-    <div class="arch-grid reveal">
-      <div class="arch-card">
-        <img src="assets/img/system-architecture.png" alt="스케줄러가 4종 외부 API를 순차 수집해 MySQL 적재 후 지표 계산과 TOP100 스코어링까지 도는 일일 배치 흐름 다이어그램" loading="lazy">
-        <div class="cap"><span>시스템 아키텍처</span><a href="https://project-valuepick.github.io/valuepick/시스템%20아키텍쳐.html" target="_blank" rel="noopener">상세보기</a></div>
-        <p class="arch-desc">스케줄러가 4종 외부 API를 순차 수집 → MySQL 적재 → 지표 계산 → TOP100 스코어링까지의 일일 배치 흐름</p>
+        <p class="desc">ValuePick 본 서비스가 매일 계산하는 7팩터(PER·PBR·ROE·ROA·부채비율·EPS성장률·모멘텀) 가중 스코어링을 Spark로 그대로 재현하고, 2021~2023년 실제 시세·재무 데이터로 검증했습니다. 가중치 프리셋 2,187개 × 리밸런싱 주기 2개 × 보유종목수 5개 = 21,870개 조합을 동시에 탐색하는 과정이 자연스럽게 대규모 분산 처리 과제가 됐고, 드라이버 OOM·실행계획 폭발·셔플 스필 같은 실제 장애를 겪으며 Spark를 익혔습니다. 룩어헤드 바이어스(미래 시점 데이터 사용) 방지를 위해 재무제표는 DART 접수번호 기준, 가격은 매 리밸런싱 시점마다 실제 종가로 다시 계산하는 이중 장치를 뒀습니다.</p>
       </div>
-      <div class="arch-card">
-        <img src="assets/img/tech-architecture.png" alt="Spring Boot 백엔드, MySQL, NGINX, Docker, EC2, Jenkins로 구성된 배포·운영 기술 스택 구성도" loading="lazy">
-        <div class="cap"><span>기술 아키텍처</span><a href="https://project-valuepick.github.io/valuepick/기술%20아키텍쳐.html" target="_blank" rel="noopener">상세보기</a></div>
-        <p class="arch-desc">Spring Boot·MySQL 기반 애플리케이션을 Docker로 컨테이너화하고 NGINX·Jenkins·EC2로 배포·운영하는 인프라 구성</p>
-      </div>
-    </div>
-  </section>
 
-  <!-- SHOWCASE -->
-  <section class="wrap">
-    <div class="section-head reveal">
-      <span class="kicker">Product Walkthrough</span>
-      <h2>주요 기능</h2>
-      <p>탭을 눌러 화면별 데모를 확인할 수 있습니다.</p>
-    </div>
-    <div class="reveal">
-      <div class="tab-list" id="tabList">
-        <button class="tab-btn active" type="button" aria-pressed="true" data-src="assets/demo/home.gif" data-cap="홈 · 코스피 지수/환율 위젯, TOP10, 4대 랭킹 — 10초 주기 실시간 갱신">홈 화면</button>
-        <button class="tab-btn" type="button" aria-pressed="false" data-src="assets/demo/screening.gif" data-cap="종목 리스트 · PER/PBR/ROE/배당수익률 필터, 정렬, 페이징, 종목명 검색">종목 스크리닝</button>
-        <button class="tab-btn" type="button" aria-pressed="false" data-src="assets/demo/detail.gif" data-cap="종목 상세 · 재무제표 연도별 추이, 투자지표, 관련 뉴스, Canvas 차트">종목 상세</button>
-        <button class="tab-btn" type="button" aria-pressed="false" data-src="assets/demo/top100.gif" data-cap="TOP100 랭킹 · Piotroski F-Score + 7개 팩터 가중 스코어링 결과">TOP100 랭킹</button>
-        <button class="tab-btn" type="button" aria-pressed="false" data-src="assets/demo/login.gif" data-cap="JWT(Access/Refresh) 기반 회원가입 · 로그인 · 토큰 재발급">로그인</button>
-        <button class="tab-btn" type="button" aria-pressed="false" data-src="assets/demo/mypage.gif" data-cap="마이페이지 · 닉네임/비밀번호 변경, 회원탈퇴(soft delete, 30일 유예)">마이페이지</button>
-        <button class="tab-btn" type="button" aria-pressed="false" data-src="assets/demo/favorite.gif" data-cap="관심종목 등록 / 해제">관심종목</button>
-        <button class="tab-btn" type="button" aria-pressed="false" data-src="assets/demo/invest.gif" data-cap="투자일지 · 종목별 매수/매도 기록, 보유/완료 상태 관리, 손익 메모">투자일지</button>
+      <h3 class="panel-title reveal">아키텍처</h3>
+      <div class="arch-grid reveal">
+        <div class="arch-card">
+          <img src="assets/img/spark/cluster-architecture.png" alt="Spark Standalone 클러스터(master 1 + worker 2)와 History Server, Jupyter, MySQL로 구성된 아키텍처" loading="lazy">
+          <div class="cap"><span>클러스터 구성</span><a href="https://jsh340866.github.io/Apache-Spark/cluster-architecture.html" target="_blank" rel="noopener">상세보기</a></div>
+          <p class="arch-desc">Docker Compose 기반 Spark Standalone(master 1 + worker 2), 실패 원인 규명용 History Server, 검증용 Jupyter, 서빙용 MySQL로 구성했습니다.</p>
+        </div>
+        <div class="arch-card">
+          <img src="assets/img/spark/data-pipeline.png" alt="원천 수집부터 백테스트, MySQL 서빙까지 5단계 Spark 잡으로 이어지는 데이터 파이프라인" loading="lazy">
+          <div class="cap"><span>데이터 파이프라인</span><a href="https://jsh340866.github.io/Apache-Spark/data-pipeline.html" target="_blank" rel="noopener">상세보기</a></div>
+          <p class="arch-desc">원천 수집 → 시세 정제 → 지표 계산 → 백테스트 → MySQL 서빙, 5단계 잡을 거치며 잡 사이 전달은 전부 Parquet을 사용했습니다.</p>
+        </div>
       </div>
-      <div class="media-frame">
-        <img id="featureImg" src="assets/demo/home.gif" alt="ValuePick 홈 화면 데모">
+
+      <h3 class="panel-title reveal">트러블슈팅</h3>
+      <p class="ts-hint reveal">혼자 진행한 프로젝트라 아래 9건 모두 직접 부딪히고 해결했습니다. 각 항목을 눌러 상세(Problem · Approach · 결과)를 펼쳐볼 수 있습니다.</p>
+      <div class="ts-grid reveal">
+        <details class="ts-card">
+          <summary><span class="label label-muted">ISSUE 01</span><h4>F.first()/F.last() 순서 비결정성 — 같은 원인의 버그 3건</h4></summary>
+          <div class="ts-body">
+            <div class="ts-block"><div class="lbl">Problem</div><p>자본총계가 실행할 때마다 다른 값으로 나오고, 같은 종목의 표시통화가 서로 다른 공시에서 섞이는 등 같은 원인의 버그를 세 번 겪었습니다. Spark의 셔플은 행 순서를 보장하지 않는데 orderBy 없이 F.first()/F.last()를 쓴 게 원인이었습니다.</p></div>
+            <div class="ts-block"><div class="lbl">Approach</div><p>계정 중복은 sj_div 필터로 후보를 하나로 좁혀 순서 의존성 자체를 제거하고, 통화는 결정된 접수번호에 실제로 달린 값을 조인해 가져오고, 누적 집계는 orderBy와 프레임을 명시한 윈도우 위의 F.last()로 바꿨습니다.</p></div>
+            <div class="ts-result">결과: 실행마다 값이 바뀌던 문제 제거. 세 번 겪고 나서 "groupBy().agg()에 F.first()/F.last()를 쓸 때는 순서 보장 여부를 반드시 확인한다"를 프로젝트 규칙으로 정했습니다</div>
+          </div>
+        </details>
+        <details class="ts-card">
+          <summary><span class="label label-muted">ISSUE 02</span><h4>실행계획 트리 폭발 → 드라이버 OOM</h4></summary>
+          <div class="ts-body">
+            <div class="ts-block"><div class="lbl">Problem</div><p>백테스트 잡이 3연속 OOM으로 실패했습니다. 데이터가 커서인 줄 알고 executor 메모리를 늘렸지만 소용없었고, 실제로는 드라이버가 4GB 한도에서 5.04GB를 쓰며 GC만 도는 동안 워커는 놀고 있었습니다. 리밸런싱 시점마다 for문으로 unionByName을 이어붙이니 매번 Catalyst가 실행계획 전체를 재분석한 게 원인이었습니다(시점 12개에서 계획 길이 32,218자 → 1,010,833자).</p></div>
+            <div class="ts-block"><div class="lbl">Approach</div><p>시점을 "반복 대상"이 아니라 "데이터"로 바꿔, 시점 목록 자체를 DataFrame으로 만들어 crossJoin 한 번으로 처리했습니다. 이때 Window.partitionBy에 rebalance_date를 반드시 포함해야 서로 다른 시점의 종목이 한 랭킹에 섞이지 않습니다.</p></div>
+            <div class="ts-result">결과: 시점을 6.5배 늘려도 실행계획 길이는 3.5%만 증가. 전략 수가 늘어도 계획 조각은 1개로 고정</div>
+          </div>
+        </details>
+        <details class="ts-card">
+          <summary><span class="label label-muted">ISSUE 03</span><h4>row_number() 동순위 — 타이브레이커 누락으로 16,605건 불일치</h4></summary>
+          <div class="ts-body">
+            <div class="ts-block"><div class="lbl">Problem</div><p>위 벡터화 작업을 하면서 기존 로직을 그대로 복제한 대조 스크립트로 36개 시점 전체를 비교하다 16,605건 불일치를 발견했습니다. DART 사업보고서 하나에 당기·전기·전전기 3개년치가 함께 응답으로 와서 (종목, 접수번호) 조합이 최대 3행 중복 존재했고(실측 530개 조합), 접수번호만으로 정렬하면 이 3행이 동순위가 되어 row_number()가 비결정적으로 하나를 골랐습니다.</p></div>
+            <div class="ts-block"><div class="lbl">Approach</div><p>정렬 기준에 연도를 타이브레이커로 추가해 "그 보고서가 다루는 최신 연도"를 결정적으로 채택하도록 고쳤습니다.</p></div>
+            <div class="ts-result">결과: 리팩터링 전후 결과가 같은지 실제로 대조하지 않았다면 그대로 묻혔을 버그였습니다. 벡터화 전/후 대조 스크립트를 만들어 둔 게 이걸 잡아냈습니다</div>
+          </div>
+        </details>
+        <details class="ts-card">
+          <summary><span class="label label-muted">ISSUE 04</span><h4>셔플 파티션 고정값 — 스필 277GB</h4></summary>
+          <div class="ts-body">
+            <div class="ts-block"><div class="lbl">Problem</div><p>전략 수를 1,000개에서 21,870개로 늘린 뒤 랭킹 단계가 20분 넘게 태스크 0/4 상태로 멈췄습니다. Spark REST API로 스테이지를 조회하니 메모리 스필 277GB, 디스크 스필 68GB가 쌓이고 있었습니다.</p></div>
+            <div class="ts-block"><div class="lbl">Approach</div><p>shuffle.partitions=4는 워커 4코어에 맞춰 1,000개 그리드 기준으로 잡은 값이었는데, 전략이 22배 늘어도 파티션은 그대로라 파티션 하나가 executor 메모리를 초과하고 있었습니다. 설정 파일은 두고 이 실행에만 64로 override했습니다.</p></div>
+            <div class="ts-result">결과: 21,870개 전략 백테스트 성공. 다만 64는 이 규모에서 유효했던 값이지 일반 공식이 아니라, 그리드가 바뀌면 다시 조정해야 합니다</div>
+          </div>
+        </details>
+        <details class="ts-card">
+          <summary><span class="label label-muted">ISSUE 05</span><h4>History Server 도입 — 죽은 잡의 원인을 사후에 규명하기</h4></summary>
+          <div class="ts-body">
+            <div class="ts-block"><div class="lbl">Problem</div><p>백테스트가 연속 실패하던 시기에 가장 답답했던 건 "어디서 멈췄는지 알 수 없다"는 점이었습니다. 드라이버 UI는 잡 프로세스가 죽으면 함께 사라지기 때문입니다.</p></div>
+            <div class="ts-block"><div class="lbl">Approach</div><p>docker-compose에 History Server를 추가하고, 이벤트 로그를 마운트된 볼륨에 쓰도록 설정했습니다. 컨테이너 내부 경로에 쓰면 재생성 시 로그도 함께 사라져 목적을 잃습니다.</p></div>
+            <div class="ts-result">결과: 위 스필 277GB를 실측할 수 있었던 것도 이 인프라 덕분입니다. 실패를 분석할 수 있게 만드는 것 자체가 선행 작업이라는 걸 배웠습니다</div>
+          </div>
+        </details>
+        <details class="ts-card">
+          <summary><span class="label label-muted">ISSUE 06</span><h4>조인 fan-out — 지표가 종목당 23배 증식</h4></summary>
+          <div class="ts-body">
+            <div class="ts-block"><div class="lbl">Problem</div><p>2021년 지표 결과가 55,182행이었습니다. 실제 종목은 2,368개니 약 23배로 불어난 것입니다. 모멘텀 계산용 스냅샷을 종목코드만으로 조인했는데, 수집 배치를 여러 날 반복 실행하면서 같은 종목의 스냅샷이 날짜별로 계속 쌓이고 있었습니다.</p></div>
+            <div class="ts-block"><div class="lbl">Approach</div><p>조인 전에 종목별 가장 최근 스냅샷 1건만 남기는 함수를 두어 증식 자체를 차단했습니다.</p></div>
+            <div class="ts-result">결과: 종목당 정확히 1행으로 정상화. 초기 79종목 검증 때는 배치가 한 번만 돌아 드러나지 않던 버그라, 이후로는 조인마다 결과 행 수를 확인하게 됐습니다</div>
+          </div>
+        </details>
+        <details class="ts-card">
+          <summary><span class="label label-muted">ISSUE 07</span><h4>탐지는 됐지만 연결이 안 된 이상치 필터</h4></summary>
+          <div class="ts-body">
+            <div class="ts-block"><div class="lbl">Problem</div><p>한 구간 수익률이 +179%로 튀는 걸 발견했습니다. 종목 하나가 467원에서 9,340원으로 급등해 10종목 동일비중 포트폴리오에서 나머지 9종목 손실을 전부 뒤엎은 것이었습니다. 계산 자체는 정확했고, 문제는 다른 데 있었습니다 — 시세 정제 단계가 이 급등을 이미 정확히 탐지해 플래그를 찍어뒀는데, 백테스트가 그 컬럼을 한 번도 읽지 않고 있었습니다.</p></div>
+            <div class="ts-block"><div class="lbl">Approach</div><p>수익률 계산 함수에 플래그를 넘겨 보유 구간에 플래그가 있는 종목을 그 구간에서 제외했습니다. 이때 플래그 테이블을 구간과 직접 조인하면 구간 안 플래그 일수만큼 행이 불어나므로, 먼저 (종목, 구간) 단위로 좁힌 뒤 left_anti 조인을 썼습니다.</p></div>
+            <div class="ts-result">결과: 최고 수익률이 +193.2%에서 +32.7%로 바뀌고 상위권 성격도 뒤집혔습니다. 이상치 하나가 그리드 탐색 결론 전체를 왜곡하고 있었던 셈입니다</div>
+          </div>
+        </details>
+        <details class="ts-card">
+          <summary><span class="label label-muted">ISSUE 08</span><h4>룩어헤드 바이어스 — "최신가 고정 PER"의 함정</h4></summary>
+          <div class="ts-body">
+            <div class="ts-block"><div class="lbl">Problem</div><p>지표 계산 단계는 가장 최근 종가로 PER/PBR을 계산합니다. 서비스 관점에서는 맞지만, 백테스트에서 이 값을 그대로 쓰면 2021년 시점 스크리닝에 2023년 주가로 계산된 PER을 쓰게 됩니다. 미래를 알고 투자한 것과 같아서 백테스트 신뢰도를 근본부터 무너뜨립니다.</p></div>
+            <div class="ts-block"><div class="lbl">Approach</div><p>지표 단계는 가격에 의존하지 않는 원본 재무값만 내보내고, 백테스트가 각 리밸런싱 시점의 실제 종가로 PER/PBR/배당수익률을 매번 다시 계산하도록 재작성했습니다.</p></div>
+            <div class="ts-result">결과: 지표 단계가 여전히 내보내는 PER/PBR 컬럼은 Java 원본과의 대조검증 전용으로만 남기고, 백테스트는 이 컬럼을 사용하지 않습니다</div>
+          </div>
+        </details>
+        <details class="ts-card">
+          <summary><span class="label label-muted">ISSUE 09</span><h4>MDD 계산에서 자산곡선 시작점이 빠져 있던 문제</h4></summary>
+          <div class="ts-body">
+            <div class="ts-block"><div class="lbl">Problem</div><p>MDD(최대낙폭)는 "고점 대비 얼마나 떨어졌는가"인데, 고점을 누적수익률의 최댓값으로만 계산하면 자산곡선의 시작점(투자 직후, 누적 0%)이 고점 후보에서 빠집니다. 첫 구간부터 하락한 전략은 그 낙폭이 MDD에 아예 안 잡힙니다 — 첫 구간이 -20%면 고점이 -0.2가 되어 낙폭이 0으로 계산됩니다.</p></div>
+            <div class="ts-block"><div class="lbl">Approach</div><p>고점 계산에 하한을 0으로 걸어 "원금 시점"도 고점 후보에 포함되도록 했습니다.</p></div>
+            <div class="ts-result">결과: 첫 구간부터 하락한 전략의 낙폭이 MDD에 정상 반영</div>
+          </div>
+        </details>
       </div>
-      <p class="media-cap" id="featureCap">홈 · 코스피 지수/환율 위젯, TOP10, 4대 랭킹 — 10초 주기 실시간 갱신</p>
-    </div>
-  </section>
 
-  <!-- TROUBLESHOOTING -->
-  <section class="wrap">
-    <div class="section-head reveal">
-      <span class="kicker">Problem Solving</span>
-      <h2>트러블슈팅 하이라이트</h2>
-      <p>개발하면서 실제로 부딪힌 문제와, 그걸 왜 이렇게 풀었는지입니다.</p>
-    </div>
-    <p class="ts-hint reveal">각 항목을 눌러 상세(Problem · Approach · 결과)를 펼쳐볼 수 있습니다.</p>
-    <div class="ts-grid reveal">
-      <details class="ts-card">
-        <summary><span class="label label-muted">ISSUE 01</span><h4>TOP100 스코어링 N+1 문제</h4></summary>
-        <div class="ts-body">
-          <div class="ts-block"><div class="lbl">Problem</div><p>전체 지표를 순회하며 각 종목의 corpCls·indutyCode를 읽어야 했는데, StockIndicator.company가 지연 로딩(LAZY)이라 지표 건수만큼 추가 SELECT가 나갔음</p></div>
-          <div class="ts-block"><div class="lbl">Approach</div><p>스코어링용 조회 쿼리를 JOIN FETCH로 재작성해 StockIndicator와 Company를 한 번에 로딩하도록 변경</p></div>
-          <div class="ts-result">결과: 지표 건수만큼 발생하던 추가 SELECT를 제거해, 전체 종목 스코어링을 단일 쿼리로 처리</div>
+      <h3 class="panel-title reveal">분석 결과</h3>
+      <p class="ts-hint reveal">좌우로 넘겨서 차트를 볼 수 있습니다. 아래 결과는 모두 2021~2023년 3년 표본에서의 사후 관찰이라, 특정 조합이 "최적"이라는 일반화 근거는 아닙니다.</p>
+      <div class="carousel reveal" id="sparkCarousel">
+        <div class="carousel-track" id="sparkTrack">
+          <div class="carousel-slide">
+            <div class="slide-card">
+              <img src="assets/img/spark/market-compare-scatter.png" alt="ALL 시장과 KOSPI 단독 실행의 전략별 최종수익률 산점도" loading="lazy">
+              <div class="slide-body">
+                <h4>시장 범위에 따라 결과가 크게 달라진다</h4>
+                <p>동일한 21,870개 전략을 KOSPI+KOSDAQ 전체와 KOSPI만으로 각각 실행했습니다. 대각선 위쪽이 "KOSPI에서 더 잘 된 전략"인데 21,870개 중 19,045개(약 87%)가 여기 분포합니다. 격차가 가장 큰 전략은 +142.3%p까지 벌어졌습니다.</p>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-slide">
+            <div class="slide-card">
+              <img src="assets/img/spark/market-compare-histogram.png" alt="ALL과 KOSPI의 최종수익률 분포 히스토그램" loading="lazy">
+              <div class="slide-body">
+                <h4>분포 자체가 통째로 이동했다</h4>
+                <p>평균이 ALL -9.75%에서 KOSPI +5.69%로, 범위도 -64.1%~+85.8%에서 -34.6%~+134.5%로 옮겨갔습니다. 소수 전략이 아니라 분포 전체가 이동한 것이라, 종목 풀 선정이 가중치 조합보다 결과에 더 크게 작용했다고 볼 수 있습니다.</p>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-slide">
+            <div class="slide-card">
+              <img src="assets/img/spark/portfolio-size-curve-score.png" alt="점수 그리드에서 보유 종목 수별 누적수익률 추이" loading="lazy">
+              <div class="slide-body">
+                <h4>보유 종목 수가 성과 분산을 지배한다</h4>
+                <p>점수 그리드에서 상·하위 성과 전략이 거의 전부 n3(3종목 집중)였습니다. 파란선(n=3)만 유독 크게 출렁이고 나머지(n=10~100)는 서로 비슷하게 움직이며 변동폭이 작습니다. 소수 종목에 몰면 한 종목의 등락이 전체를 좌우해 잘 되면 크게, 안 되면 크게 튑니다.</p>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-slide">
+            <div class="slide-card">
+              <img src="assets/img/spark/portfolio-size-curve-threshold.png" alt="문턱값 그리드에서 보유 종목 수별 누적수익률 추이" loading="lazy">
+              <div class="slide-body">
+                <h4>하락장에서는 분산이 방어에 유리했다</h4>
+                <p>같은 패턴이 구 문턱값 그리드에서도 나타났는데, 여기서는 보유 종목 수를 늘릴수록(n10 +9.6% → n300 +25.8%) 최종 성과가 단조롭게 개선됐습니다.</p>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-slide">
+            <div class="slide-card">
+              <img src="assets/img/spark/factor-correlation.png" alt="팩터별 가중치와 평균 성과의 상관계수 막대그래프" loading="lazy">
+              <div class="slide-body">
+                <h4>이 표본에서는 PBR이 유리, 모멘텀이 불리했다</h4>
+                <p>가중치 프리셋 2,187개를 팩터별 가중치와 평균 성과로 상관분석한 결과입니다. PBR 가중치가 +0.505로 가장 강한 양의 상관, 모멘텀이 -0.362로 가장 강한 음의 상관을 보였습니다. 2021~2023년이 하락·횡보장이었다는 점을 감안하면 추세 추종이 불리하고 저평가 지표가 방어적이었다는 해석과 맞아떨어집니다.</p>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-slide">
+            <div class="slide-card">
+              <img src="assets/img/spark/w0682-period-returns.png" alt="최고 성과 전략의 리밸런싱 구간별 수익률 막대그래프" loading="lazy">
+              <div class="slide-body">
+                <h4>최고 성과는 단 한 구간에서 나왔다</h4>
+                <p>KOSPI 1위 전략(+134.5%)이 왜 높았는지 추적했더니, 35개 리밸런싱 구간 중 2022-10-31~11-30 한 구간이 +59.9%로 전체 성과를 만들었습니다. 그 시점 매수 종목을 재현해보니 F&amp;F홀딩스 +110.7%, KISCO홀딩스 +34.5%, 금호건설 +34.4%였습니다.</p>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-slide">
+            <div class="slide-card">
+              <img src="assets/img/spark/w0682-weights.png" alt="최고 성과 전략의 7팩터 가중치를 ValuePick 원본과 비교한 막대그래프" loading="lazy">
+              <div class="slide-body">
+                <h4>그 전략의 가중치 구성</h4>
+                <p>ValuePick 원본 가중치 대비 PBR·ROE를 크게 높이고 PER·부채비율은 낮춘 조합입니다(PER 25%→14.7%, PBR 15%→24.5%, ROE 20%→29.4%, 부채비율 15%→4.9%). 다만 이건 이 표본에서 결과가 좋았던 조합일 뿐, 좋은 가중치라는 근거는 아닙니다.</p>
+              </div>
+            </div>
+          </div>
         </div>
-      </details>
-      <details class="ts-card">
-        <summary><span class="label label-muted">ISSUE 02</span><h4>DART 수집 전용 비동기 스레드풀 분리</h4></summary>
-        <div class="ts-body">
-          <div class="ts-block"><div class="lbl">Problem</div><p>성격이 다른 주가 수집과 DART 수집(재무·기업·배당)을 한 스레드풀로 처리하면, 오래 걸리는 쪽 때문에 다른 작업까지 큐에서 밀릴 수 있었음</p></div>
-          <div class="ts-block"><div class="lbl">Approach</div><p>dartExecutor(core 8 / max 15 / queue 100)를 별도로 만들고 DART 수집기 3곳에 @Async("dartExecutor")를 적용, 큐를 크게 잡아 수천 건도 거절되지 않게 함</p></div>
-          <div class="ts-result">결과: 두 수집 작업이 서로 지연시키지 않고 독립 실행</div>
-        </div>
-      </details>
-      <details class="ts-card">
-        <summary><span class="label label-muted">ISSUE 03</span><h4>스코어 — 원값이 아닌 백분위로 정규화</h4></summary>
-        <div class="ts-body">
-          <div class="ts-block"><div class="lbl">Problem</div><p>PER은 배수, ROE는 %, 모멘텀은 수익률 등 지표마다 단위·스케일이 달라, 원값을 그대로 가중합하면 스케일이 큰 지표가 점수를 지배함</p></div>
-          <div class="ts-block"><div class="lbl">Approach</div><p>지표별 순위를 매겨 0~1 백분위로 변환한 뒤 가중치를 곱하도록 변경. null은 지표 유·불리에 따라 항상 최하위로 취급되게 처리</p></div>
-          <div class="ts-result">결과: 스케일 왜곡 없이 지표 간 공정한 가중 합산</div>
-        </div>
-      </details>
-      <details class="ts-card">
-        <summary><span class="label label-muted">ISSUE 04</span><h4>금융업 F-Score 예외 처리</h4></summary>
-        <div class="ts-body">
-          <div class="ts-block"><div class="lbl">Problem</div><p>F-Score는 유동비율·매출총이익률처럼 제조업 재무구조를 전제한 항목이 섞여 있어 금융업에는 구조적으로 맞지 않음</p></div>
-          <div class="ts-block"><div class="lbl">Approach</div><p>induty_code 앞 2자리(64/65/66)로 금융업을 판별해 F-Score 계산을 건너뛰고 TOP100 필터도 조건 없이 통과. 업종코드 미수집 종목은 후보에서 제외해 부당 탈락 방지</p></div>
-          <div class="ts-result">결과: 업종 특성에 맞는 스코어링, 오분류로 인한 탈락 차단</div>
-        </div>
-      </details>
-      <details class="ts-card">
-        <summary><span class="label label-muted">ISSUE 05</span><h4>DART 대량 수집 — 배치·간격·재시도</h4></summary>
-        <div class="ts-body">
-          <div class="ts-block"><div class="lbl">Problem</div><p>전체 상장사 재무제표를 수집하면서 API 과호출, 일시적 요청 실패, 중복 저장을 모두 감당해야 했음</p></div>
-          <div class="ts-block"><div class="lbl">Approach</div><p>100건 단위 페이징 순차 처리 + 회사당 sleep 100ms로 호출 속도 조절, CFS 실패 시 OFS로 재조회, HTTP 실패는 간격을 늘려가며 최대 3회 재시도, 기존 연도 데이터 존재 확인으로 중복 저장 차단</p></div>
-          <div class="ts-result">결과: 대량 수집 안정화, 과호출·중복 저장 방지</div>
-        </div>
-      </details>
-      <details class="ts-card">
-        <summary><span class="label label-muted">ISSUE 06</span><h4>스케줄러 파이프라인 순서 보장</h4></summary>
-        <div class="ts-body">
-          <div class="ts-block"><div class="lbl">Problem</div><p>주가 → 지표 계산 → TOP100은 앞 단계 결과에 의존하는 순차 파이프라인인데, @Scheduled는 각자 독립 트리거라 순서를 강제할 방법이 마땅치 않았음</p></div>
-          <div class="ts-block"><div class="lbl">Approach</div><p>cron 분(minute) 값을 의도적으로 어긋나게 배치(환율 01:00 → 주가 01:20 → 지표 01:50 → TOP100 02:00), 삭제 작업도 시차를 둬 앞 단계 완료 시간을 확보. 단, 코스피 지수 수집(MarketIndexScheduler)은 01:10에 뒀을 때 KRX 데이터가 아직 확정되지 않아 IllegalStateException으로 매번 실패했기에, 확정 시각(08:00 전후)을 확인하고 파이프라인에서 떼어내 08:30에 독립 실행</p></div>
-          <div class="ts-result">결과: 별도 오케스트레이터 없이 단계 순서 보장, 지수 수집 실패도 제거</div>
-        </div>
-      </details>
-      <details class="ts-card">
-        <summary><span class="label label-muted">ISSUE 07</span><h4>환율 API 빈 응답을 휴일 신호로 재활용</h4></summary>
-        <div class="ts-body">
-          <div class="ts-block"><div class="lbl">Problem</div><p>한국수출입은행 환율 API는 주말·공휴일에 별도 플래그 없이 빈 배열만 반환해, 캘린더만으로는 "가장 최근 영업일"을 판단할 수 없었음</p></div>
-          <div class="ts-block"><div class="lbl">Approach</div><p>빈 응답이면 예외를 던지고, 이를 캐치해 하루씩 거슬러 올라가며 재탐색(최대 10일). DB에 저장된 날짜가 있으면 API를 재호출하지 않고 재사용</p></div>
-          <div class="ts-result">결과: 별도 공휴일 달력 없이 전일 대비 변동률 정확 계산</div>
-        </div>
-      </details>
-      <details class="ts-card">
-        <summary><span class="label label-muted">ISSUE 08</span><h4>종목명 필터링 — 법령 근거로 매칭 구분</h4></summary>
-        <div class="ts-body">
-          <div class="ts-block"><div class="lbl">Problem</div><p>리츠·스팩을 contains로만 걸러내면 "메리츠"·"블리츠" 같은 무관한 종목까지 오탐돼 화이트리스트를 하드코딩해야 했음</p></div>
-          <div class="ts-block"><div class="lbl">Approach</div><p>부동산투자회사법상 리츠는 상호 끝에 "리츠"를 붙이므로 endsWith("리츠"), 자본시장법상 스팩은 상호 어디든 "스팩"이 들어가므로 contains("스팩")로 구분 적용</p></div>
-          <div class="ts-result">결과: 하드코딩 화이트리스트 제거, 신규 상장 종목도 코드 수정 없이 자동 분류</div>
-        </div>
-      </details>
-    </div>
-  </section>
-
-  <!-- MOBILE -->
-  <section class="wrap">
-    <div class="section-head reveal">
-      <span class="kicker">Responsive</span>
-      <h2>모바일 화면</h2>
-      <p>반응형으로 모바일 환경에서도 동일한 기능을 제공합니다.</p>
-    </div>
-    <div class="mobile-strip reveal">
-      <a class="phone" href="assets/img/responsive-home.png" target="_blank" rel="noopener"><img src="assets/img/responsive-home.png" alt="홈 화면 모바일 레이아웃" loading="lazy"></a>
-      <a class="phone" href="assets/img/responsive-list.png" target="_blank" rel="noopener"><img src="assets/img/responsive-list.png" alt="종목 목록 모바일 레이아웃" loading="lazy"></a>
-      <a class="phone" href="assets/img/responsive-rank.png" target="_blank" rel="noopener"><img src="assets/img/responsive-rank.png" alt="TOP100 랭킹 모바일 레이아웃" loading="lazy"></a>
-      <a class="phone" href="assets/img/responsive-journal.png" target="_blank" rel="noopener"><img src="assets/img/responsive-journal.png" alt="투자일지 모바일 레이아웃" loading="lazy"></a>
-      <a class="phone" href="assets/img/responsive-favorite.png" target="_blank" rel="noopener"><img src="assets/img/responsive-favorite.png" alt="관심종목 모바일 레이아웃" loading="lazy"></a>
-      <a class="phone" href="assets/img/responsive-mypage.png" target="_blank" rel="noopener"><img src="assets/img/responsive-mypage.png" alt="마이페이지 모바일 레이아웃" loading="lazy"></a>
+        <button class="carousel-btn" type="button" data-dir="-1" aria-label="이전 차트">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button class="carousel-btn" type="button" data-dir="1" aria-label="다음 차트">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+      <div class="motto reveal">최고 성과 전략(KOSPI, +134.5%)을 실제로 추적해보니 로직이 우량주를 찾아낸 게 아니라, 일회성 회계 착시(F&amp;F홀딩스의 순이익 조정 항목)가 우연히 주가 급등과 겹친 사례였습니다. 21,870개 조합 중 1등을 뽑는 그리드 탐색이 오버피팅에 취약하다는 걸 실감한 부분입니다.</div>
     </div>
   </section>
 
@@ -1009,6 +1319,14 @@
 <footer>
   © 2026 Seungwon Jeong
 </footer>
+
+<!-- 이미지 원본 확대 -->
+<dialog class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose" type="button" aria-label="닫기">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+  </button>
+  <img id="lightboxImg" src="" alt="">
+</dialog>
 
 <script>
   // 테마 토글 — 복원은 <head> 인라인 스크립트가 담당(FOUC 방지), 여기선 클릭만
@@ -1068,6 +1386,122 @@
     });
     activate(tabList.querySelector('.tab-btn'));
   })();
+
+  // 이미지 원본 확대 — 캐러셀 차트와 아키텍처 다이어그램
+  (function(){
+    const dlg = document.getElementById('lightbox');
+    if(!dlg || typeof dlg.showModal !== 'function') return;
+    const sel = '.slide-card img, .arch-card img';
+    const view = document.getElementById('lightboxImg');
+
+    document.querySelectorAll(sel).forEach(function(el){ el.classList.add('zoomable'); });
+
+    document.addEventListener('click', function(e){
+      const img = e.target.closest(sel);
+      if(!img) return;
+      view.src = img.currentSrc || img.src;
+      view.alt = img.alt;
+      dlg.showModal();
+    });
+    document.getElementById('lightboxClose').addEventListener('click', function(){ dlg.close(); });
+    // 이미지 바깥(백드롭) 클릭 시 닫기
+    dlg.addEventListener('click', function(e){ if(e.target === dlg) dlg.close(); });
+    // 닫힌 뒤 src를 비워 큰 이미지를 메모리에 붙들지 않게
+    dlg.addEventListener('close', function(){ view.removeAttribute('src'); });
+  })();
+
+  // 분석 결과 캐러셀 — 한 방향으로 계속 도는 무한 순환
+  (function(){
+    const track = document.getElementById('sparkTrack');
+    if(!track) return;
+    const btns = document.querySelectorAll('#sparkCarousel .carousel-btn');
+    const originals = Array.prototype.slice.call(track.children);
+    const total = originals.length;
+    const ANIM = 420; // scrollTo smooth가 끝나기까지 잡아둔 시간
+
+    // 세트를 한 벌 복제해 뒤에 붙인다. 복제 구간은 원본과 같은 그림이라
+    // 그 자리에서 원본 위치로 순간이동해도 이음매가 보이지 않는다.
+    originals.forEach(function(el){
+      const clone = el.cloneNode(true);
+      clone.setAttribute('aria-hidden', 'true');
+      track.appendChild(clone);
+    });
+
+    let idx = 0;
+    let moving = false;
+
+    // 숨겨진 탭 안에선 폭이 0이라 가드가 필요
+    function slideW(){ return originals[0].getBoundingClientRect().width; }
+    function go(i, smooth){
+      const w = slideW();
+      if(!w) return;
+      // 'auto'는 CSS scroll-behavior를 따르므로 순간이동이 애니메이션이 돼버린다. 'instant'로 명시
+      track.scrollTo({left: i * w, behavior: smooth ? 'smooth' : 'instant'});
+    }
+
+    btns.forEach(function(b){
+      b.addEventListener('click', function(){
+        if(moving || !slideW()) return;
+        moving = true;
+
+        if(Number(b.dataset.dir) > 0){
+          idx += 1;
+          go(idx, true);
+          if(idx >= total){
+            // 복제 구간에 올라섰으면 애니메이션이 끝난 뒤 원본 같은 자리로 되돌림
+            setTimeout(function(){ idx -= total; go(idx, false); moving = false; }, ANIM);
+            return;
+          }
+        } else {
+          if(idx === 0){
+            // 처음에서 뒤로 갈 땐 복제 구간 같은 자리로 먼저 순간이동
+            idx = total;
+            go(idx, false);
+          }
+          idx -= 1;
+          go(idx, true);
+        }
+        setTimeout(function(){ moving = false; }, ANIM);
+      });
+    });
+
+    // 손가락으로 스와이프한 경우엔 위치를 다시 읽어 맞춘다
+    let t;
+    track.addEventListener('scroll', function(){
+      if(moving) return;
+      clearTimeout(t);
+      t = setTimeout(function(){
+        const w = slideW();
+        if(!w) return;
+        idx = Math.round(track.scrollLeft / w);
+        if(idx >= total){ idx -= total; go(idx, false); }
+      }, 120);
+    }, {passive:true});
+  })();
+
+  // 프로젝트 전환 탭 (ValuePick / Spark)
+  (function(){
+    const tabList = document.getElementById('projectTabList');
+    if(!tabList) return;
+    function activate(btn){
+      tabList.querySelectorAll('.tab-btn').forEach(function(b){
+        b.classList.remove('active');
+        b.setAttribute('aria-pressed','false');
+      });
+      document.querySelectorAll('.project-tab-panel').forEach(function(p){ p.style.display = 'none'; });
+      btn.classList.add('active');
+      btn.setAttribute('aria-pressed','true');
+      const panel = document.getElementById(btn.dataset.project);
+      panel.style.display = 'block';
+      // 숨겨진 동안 IntersectionObserver가 지나쳐 갔을 수 있어 즉시 노출 처리
+      panel.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('visible'); });
+    }
+    tabList.addEventListener('click', function(e){
+      const btn = e.target.closest('.tab-btn');
+      if(btn) activate(btn);
+    });
+  })();
+
 </script>
 
 </body>
