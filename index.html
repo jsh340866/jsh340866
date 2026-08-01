@@ -613,7 +613,7 @@
   .slide-body{padding:var(--space-4) var(--space-5);}
   .slide-body h4{font-size:var(--text-base);margin-bottom:var(--space-2);word-break:keep-all;}
   .slide-body p{
-    margin:0;font-size:var(--text-sm);color:var(--color-ink-soft);
+    margin:0;font-size:var(--text-base);color:var(--color-ink-soft);
     word-break:keep-all;
   }
   /* 좌우 오버레이 화살표 — 이미지 영역 세로 중앙에 맞춰 띄운다
@@ -640,6 +640,8 @@
   @media (hover: none){
     .carousel-btn{opacity:1;}
   }
+  /* 끝에 도달하면 그 방향 화살표를 숨김 — 순환하지 않는다는 신호 */
+  .carousel-btn:disabled{opacity:0 !important;pointer-events:none;}
 
   /* ============================================ LIGHTBOX — 차트/다이어그램 원본 확대
      native <dialog>라 ESC 닫기·포커스 처리는 브라우저가 담당 */
@@ -1226,26 +1228,17 @@
             <div class="slide-card">
               <img src="assets/img/spark/market-compare-histogram.png" alt="ALL과 KOSPI의 최종수익률 분포 히스토그램" loading="lazy">
               <div class="slide-body">
-                <h4>분포 자체가 통째로 이동했다</h4>
-                <p>평균이 ALL -9.75%에서 KOSPI +5.69%로, 범위도 -64.1%~+85.8%에서 -34.6%~+134.5%로 옮겨갔습니다. 소수 전략이 아니라 분포 전체가 이동한 것이라, 종목 풀 선정이 가중치 조합보다 결과에 더 크게 작용했다고 볼 수 있습니다.</p>
+                <h4>봉우리 자체가 오른쪽으로 옮겨갔다</h4>
+                <p>21,870개 전략 각각의 최종수익률을 히스토그램으로 그려보면, ALL(파랑)은 -25%~0% 구간에 몰려 있고 KOSPI(주황)는 0%~+25% 구간에 몰려 있습니다. 일부 전략만 잘된 게 아니라 분포의 중심 자체가 이동한 것이라, 종목 풀 선정이 가중치 조합보다 결과에 더 크게 작용했다고 볼 수 있습니다.</p>
               </div>
             </div>
           </div>
           <div class="carousel-slide">
             <div class="slide-card">
-              <img src="assets/img/spark/portfolio-size-curve-score.png" alt="점수 그리드에서 보유 종목 수별 누적수익률 추이" loading="lazy">
+              <img src="assets/img/spark/portfolio-size-curve-score.png" alt="ALL 시장 점수 그리드에서 보유 종목 수별 누적수익률 추이" loading="lazy">
               <div class="slide-body">
                 <h4>보유 종목 수가 성과 분산을 지배한다</h4>
-                <p>점수 그리드에서 상·하위 성과 전략이 거의 전부 n3(3종목 집중)였습니다. 파란선(n=3)만 유독 크게 출렁이고 나머지(n=10~100)는 서로 비슷하게 움직이며 변동폭이 작습니다. 소수 종목에 몰면 한 종목의 등락이 전체를 좌우해 잘 되면 크게, 안 되면 크게 튑니다.</p>
-              </div>
-            </div>
-          </div>
-          <div class="carousel-slide">
-            <div class="slide-card">
-              <img src="assets/img/spark/portfolio-size-curve-threshold.png" alt="문턱값 그리드에서 보유 종목 수별 누적수익률 추이" loading="lazy">
-              <div class="slide-body">
-                <h4>하락장에서는 분산이 방어에 유리했다</h4>
-                <p>같은 패턴이 구 문턱값 그리드에서도 나타났는데, 여기서는 보유 종목 수를 늘릴수록(n10 +9.6% → n300 +25.8%) 최종 성과가 단조롭게 개선됐습니다.</p>
+                <p>ALL(KOSPI+KOSDAQ 전체) 시장에서 21,870개 전략을 가중치프리셋별로 평균 낸 뒤, 보유 종목 수(n)별로 나눠본 누적수익률 추이입니다. 파란선(n=3)만 유독 크게 출렁이고 나머지(n=10~100)는 서로 비슷하게 움직이며 변동폭이 작습니다. 소수 종목에 몰면 한 종목의 등락이 전체를 좌우해 잘 되면 크게, 안 되면 크게 튑니다.</p>
               </div>
             </div>
           </div>
@@ -1262,8 +1255,8 @@
             <div class="slide-card">
               <img src="assets/img/spark/w0682-period-returns.png" alt="최고 성과 전략의 리밸런싱 구간별 수익률 막대그래프" loading="lazy">
               <div class="slide-body">
-                <h4>최고 성과는 단 한 구간에서 나왔다</h4>
-                <p>KOSPI 1위 전략(+134.5%)이 왜 높았는지 추적했더니, 35개 리밸런싱 구간 중 2022-10-31~11-30 한 구간이 +59.9%로 전체 성과를 만들었습니다. 그 시점 매수 종목을 재현해보니 F&amp;F홀딩스 +110.7%, KISCO홀딩스 +34.5%, 금호건설 +34.4%였습니다.</p>
+                <h4>+134.5% 최고 성과, 뜯어보니 한 구간이 만든 결과</h4>
+                <p>21,870개 전략 중 KOSPI 단독 실행에서 가장 높은 누적수익률(+134.5%)을 기록한 전략의, 35개 리밸런싱 구간별 수익률입니다. 2022-10-31~11-30 한 구간만 +59.9%로 압도적으로 튀고 나머지 구간은 평이합니다. 그 시점 매수 종목을 재현해보니 F&amp;F홀딩스 +110.7%, KISCO홀딩스 +34.5%, 금호건설 +34.4%였습니다.</p>
               </div>
             </div>
           </div>
@@ -1271,8 +1264,8 @@
             <div class="slide-card">
               <img src="assets/img/spark/w0682-weights.png" alt="최고 성과 전략의 7팩터 가중치를 ValuePick 원본과 비교한 막대그래프" loading="lazy">
               <div class="slide-body">
-                <h4>그 전략의 가중치 구성</h4>
-                <p>ValuePick 원본 가중치 대비 PBR·ROE를 크게 높이고 PER·부채비율은 낮춘 조합입니다(PER 25%→14.7%, PBR 15%→24.5%, ROE 20%→29.4%, 부채비율 15%→4.9%). 다만 이건 이 표본에서 결과가 좋았던 조합일 뿐, 좋은 가중치라는 근거는 아닙니다.</p>
+                <h4>KOSPI 최고 성과 전략(+134.5%)의 가중치 구성</h4>
+                <p>21,870개 전략 중 KOSPI 단독 실행 최고 성과 전략이 실제로 어떤 가중치를 썼는지입니다. ValuePick 원본 대비 PBR·ROE를 크게 높이고 PER·부채비율은 낮춘 조합입니다(PER 25%→14.7%, PBR 15%→24.5%, ROE 20%→29.4%, 부채비율 15%→4.9%). 다만 이건 이 표본에서 결과가 좋았던 조합일 뿐, 좋은 가중치라는 근거는 아닙니다.</p>
               </div>
             </div>
           </div>
@@ -1410,73 +1403,64 @@
     dlg.addEventListener('close', function(){ view.removeAttribute('src'); });
   })();
 
-  // 분석 결과 캐러셀 — 한 방향으로 계속 도는 무한 순환
+  // 분석 결과 캐러셀 — 끝에 도달하면 멈춤(순환 없음)
   (function(){
     const track = document.getElementById('sparkTrack');
     if(!track) return;
     const btns = document.querySelectorAll('#sparkCarousel .carousel-btn');
-    const originals = Array.prototype.slice.call(track.children);
-    const total = originals.length;
-    const ANIM = 420; // scrollTo smooth가 끝나기까지 잡아둔 시간
-
-    // 세트를 한 벌 복제해 뒤에 붙인다. 복제 구간은 원본과 같은 그림이라
-    // 그 자리에서 원본 위치로 순간이동해도 이음매가 보이지 않는다.
-    originals.forEach(function(el){
-      const clone = el.cloneNode(true);
-      clone.setAttribute('aria-hidden', 'true');
-      track.appendChild(clone);
-    });
+    const slides = Array.prototype.slice.call(track.children);
+    const total = slides.length;
 
     let idx = 0;
-    let moving = false;
 
     // 숨겨진 탭 안에선 폭이 0이라 가드가 필요
-    function slideW(){ return originals[0].getBoundingClientRect().width; }
+    function slideW(){ return slides[0].getBoundingClientRect().width; }
+    // 한 화면에 몇 장이 보이는지(데스크톱 2장/모바일 1장) — 이 수만큼씩 옮겨야
+    // 화면이 통째로 다음 화면으로 넘어가는 느낌이 된다
+    function step(){
+      const w = slideW();
+      return w ? Math.max(1, Math.round(track.clientWidth / w)) : 1;
+    }
+    function maxIdx(){ return Math.max(0, total - step()); }
     function go(i, smooth){
       const w = slideW();
       if(!w) return;
-      // 'auto'는 CSS scroll-behavior를 따르므로 순간이동이 애니메이션이 돼버린다. 'instant'로 명시
       track.scrollTo({left: i * w, behavior: smooth ? 'smooth' : 'instant'});
+    }
+    function render(){
+      const last = maxIdx();
+      btns.forEach(function(b){
+        const dir = Number(b.dataset.dir);
+        b.disabled = (dir < 0 && idx <= 0) || (dir > 0 && idx >= last);
+      });
     }
 
     btns.forEach(function(b){
       b.addEventListener('click', function(){
-        if(moving || !slideW()) return;
-        moving = true;
-
-        if(Number(b.dataset.dir) > 0){
-          idx += 1;
-          go(idx, true);
-          if(idx >= total){
-            // 복제 구간에 올라섰으면 애니메이션이 끝난 뒤 원본 같은 자리로 되돌림
-            setTimeout(function(){ idx -= total; go(idx, false); moving = false; }, ANIM);
-            return;
-          }
-        } else {
-          if(idx === 0){
-            // 처음에서 뒤로 갈 땐 복제 구간 같은 자리로 먼저 순간이동
-            idx = total;
-            go(idx, false);
-          }
-          idx -= 1;
-          go(idx, true);
-        }
-        setTimeout(function(){ moving = false; }, ANIM);
+        if(!slideW()) return;
+        const last = maxIdx();
+        idx = Math.min(Math.max(idx + Number(b.dataset.dir) * step(), 0), last);
+        go(idx, true);
+        render();
       });
     });
 
-    // 손가락으로 스와이프한 경우엔 위치를 다시 읽어 맞춘다
+    // 손가락으로 스와이프한 경우엔 가장 가까운 "화면 경계"(step의 배수)에 맞춰 스냅
     let t;
     track.addEventListener('scroll', function(){
-      if(moving) return;
       clearTimeout(t);
       t = setTimeout(function(){
         const w = slideW();
         if(!w) return;
-        idx = Math.round(track.scrollLeft / w);
-        if(idx >= total){ idx -= total; go(idx, false); }
+        const s = step();
+        const raw = Math.round(track.scrollLeft / w);
+        idx = Math.min(Math.max(Math.round(raw / s) * s, 0), maxIdx());
+        go(idx, true);
+        render();
       }, 120);
     }, {passive:true});
+
+    render();
   })();
 
   // 프로젝트 전환 탭 (ValuePick / Spark)
