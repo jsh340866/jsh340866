@@ -19,6 +19,8 @@
     --store-dim: #17351f;
     --tool: #a371f7;
     --tool-dim: #2d1f45;
+    --driver: #56d4dd;
+    --driver-dim: #163a3d;
   }
   * { box-sizing: border-box; }
   body {
@@ -29,15 +31,15 @@
   }
   .wrap { max-width: 1180px; margin: 0 auto; }
   header { text-align: center; margin-bottom: 40px; }
-  h1 { font-size: 26px; margin: 0 0 8px; font-weight: 700; }
-  .sub { color: var(--muted); font-size: 14px; }
+  h1 { font-size: 30px; margin: 0 0 8px; font-weight: 700; }
+  .sub { color: var(--muted); font-size: 16px; }
   .legend { display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; margin: 24px 0 36px; }
-  .legend span { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--muted); }
+  .legend span { display: flex; align-items: center; gap: 7px; font-size: 15px; color: var(--muted); }
   .dot { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
 
   .diagram { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 32px 28px; }
   .tier-label {
-    font-size: 12px; letter-spacing: .08em; text-transform: uppercase;
+    font-size: 14px; letter-spacing: .08em; text-transform: uppercase;
     color: var(--muted); margin: 0 0 14px; font-weight: 600;
   }
   .tier { margin-bottom: 34px; }
@@ -49,38 +51,47 @@
     padding: 16px 20px; min-width: 210px; position: relative;
   }
   .node.master { border-color: var(--spark); background: linear-gradient(180deg, var(--spark-dim) 0%, #1c2128 60%); }
+  .node.driver { border-color: var(--driver); background: linear-gradient(180deg, var(--driver-dim) 0%, #1c2128 60%); }
+  .container-box {
+    border: 1px dashed var(--border); border-radius: 12px; padding: 20px 18px 14px;
+    position: relative; margin: 0 auto;
+  }
+  .container-label {
+    position: absolute; top: -11px; left: 16px; background: var(--panel);
+    padding: 0 8px; font-size: 13px; color: var(--muted); letter-spacing: .03em;
+  }
   .node.worker { border-color: var(--worker); background: linear-gradient(180deg, var(--worker-dim) 0%, #1c2128 60%); }
   .node.store  { border-color: var(--store);  background: linear-gradient(180deg, var(--store-dim) 0%, #1c2128 60%); }
   .node.tool   { border-color: var(--tool);   background: linear-gradient(180deg, var(--tool-dim) 0%, #1c2128 60%); }
 
-  .node h3 { margin: 0 0 4px; font-size: 15px; font-weight: 700; }
-  .node .role { font-size: 12.5px; color: var(--muted); margin-bottom: 10px; }
+  .node h3 { margin: 0 0 4px; font-size: 17px; font-weight: 700; }
+  .node .role { font-size: 14px; color: var(--muted); margin-bottom: 10px; }
   .specs { display: flex; flex-wrap: wrap; gap: 6px; }
   .chip {
-    font-size: 11.5px; padding: 2px 8px; border-radius: 999px;
+    font-size: 13px; padding: 2px 8px; border-radius: 999px;
     background: rgba(255,255,255,.06); border: 1px solid var(--border); color: var(--text);
     font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
   }
   .chip.port { color: #79c0ff; border-color: #1f4d7a; }
 
-  .connector { text-align: center; color: var(--muted); font-size: 12px; margin: 10px 0; }
+  .connector { text-align: center; color: var(--muted); font-size: 14px; margin: 10px 0; }
   .connector::before { content: "↓"; display: block; font-size: 18px; color: var(--border); margin-bottom: 2px; }
 
   .note {
     margin-top: 28px; padding: 16px 18px; border-left: 3px solid var(--spark);
-    background: rgba(226,90,28,.07); border-radius: 0 8px 8px 0; font-size: 13.5px;
+    background: rgba(226,90,28,.07); border-radius: 0 8px 8px 0; font-size: 15px;
   }
   .note strong { color: var(--spark); }
   .note + .note { margin-top: 12px; }
   .note.blue { border-left-color: var(--worker); background: rgba(47,129,247,.07); }
   .note.blue strong { color: var(--worker); }
 
-  table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 13px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 15px; }
   th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); }
-  th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
-  td code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 12.5px; color: #79c0ff; }
+  th { color: var(--muted); font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; }
+  td code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 14px; color: #79c0ff; }
 
-  footer { text-align: center; color: var(--muted); font-size: 12.5px; margin-top: 36px; }
+  footer { text-align: center; color: var(--muted); font-size: 14px; margin-top: 36px; }
   footer a { color: var(--worker); text-decoration: none; }
   footer a:hover { text-decoration: underline; }
 
@@ -98,7 +109,8 @@
   </header>
 
   <div class="legend">
-    <span><i class="dot" style="background:var(--spark)"></i> 마스터 / 드라이버</span>
+    <span><i class="dot" style="background:var(--spark)"></i> 마스터</span>
+    <span><i class="dot" style="background:var(--driver)"></i> 드라이버</span>
     <span><i class="dot" style="background:var(--worker)"></i> 연산 노드</span>
     <span><i class="dot" style="background:var(--tool)"></i> 분석 · 모니터링</span>
     <span><i class="dot" style="background:var(--store)"></i> 저장소</span>
@@ -108,21 +120,30 @@
 
     <div class="tier">
       <p class="tier-label">Control Plane</p>
-      <div class="row">
-        <div class="node master">
-          <h3>spark-master</h3>
-          <p class="role">잡 스케줄링 · 워커 리소스 배분<br/><code>spark-submit</code> 실행 위치 (드라이버가 여기서 뜸)</p>
-          <div class="specs">
-            <span class="chip port">7077 RPC</span>
-            <span class="chip port">8088 Master UI</span>
-            <span class="chip port">4040 Driver UI</span>
-            <span class="chip">--driver-memory 4g</span>
+      <div class="container-box">
+        <span class="container-label">spark-master 컨테이너 (docker)</span>
+        <div class="row">
+          <div class="node master">
+            <h3>Master</h3>
+            <p class="role">워커 등록 · 리소스 배분</p>
+            <div class="specs">
+              <span class="chip port">7077 RPC</span>
+              <span class="chip port">8088 Master UI</span>
+            </div>
+          </div>
+          <div class="node driver">
+            <h3>Driver</h3>
+            <p class="role"><code>spark-submit</code> 실행 위치<br/>잡 → 스테이지 → 태스크 스케줄링</p>
+            <div class="specs">
+              <span class="chip port">4040 Driver UI</span>
+              <span class="chip">--driver-memory 4g</span>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <p class="connector">태스크 분배 · 결과 수집</p>
+    <p class="connector">태스크 분배 · 결과 수집 (Driver ↔ 워커)</p>
 
     <div class="tier">
       <p class="tier-label">Compute — 총 4 cores</p>

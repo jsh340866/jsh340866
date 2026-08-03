@@ -478,6 +478,38 @@
   .role-item h4{font-size:var(--text-base);margin-bottom:var(--space-2);word-break:keep-all;}
   .role-item p{margin:0;font-size:var(--text-sm);color:var(--color-ink-soft);word-break:keep-all;}
 
+  .log-list{background:var(--color-surface-sunken);border-radius:var(--radius-md);overflow:hidden;}
+  .log-list > summary{
+    display:flex;align-items:center;gap:var(--space-3);cursor:pointer;list-style:none;
+    padding:var(--space-4) var(--space-5);font-weight:700;font-size:var(--text-base);
+  }
+  .log-list > summary::-webkit-details-marker{display:none;}
+  .log-list > summary:focus-visible{outline:2px solid var(--color-brand);outline-offset:-2px;border-radius:var(--radius-xs);}
+  .log-list > summary::after{
+    margin-left:auto;flex:0 0 auto;content:'';width:8px;height:8px;
+    border-right:2px solid var(--color-ink-faint);border-bottom:2px solid var(--color-ink-faint);
+    transform:rotate(45deg);transition:transform .15s ease;
+  }
+  .log-list[open] > summary::after{transform:rotate(-135deg);}
+  .log-items{display:flex;flex-direction:column;gap:var(--space-3);padding:0 var(--space-5) var(--space-5);}
+  .log-item{
+    display:flex;align-items:center;gap:var(--space-4);
+    background:var(--color-surface);border-radius:var(--radius-md);
+    padding:var(--space-4) var(--space-5);
+  }
+  .log-item .num{
+    flex:0 0 auto;font-size:var(--text-xs);font-weight:700;letter-spacing:.05em;
+    color:var(--color-brand);
+  }
+  .log-item .log-body{flex:1 1 auto;min-width:0;}
+  .log-item h4{font-size:var(--text-base);margin:0 0 2px;word-break:keep-all;}
+  .log-item p{margin:0;font-size:var(--text-sm);color:var(--color-ink-soft);word-break:keep-all;}
+  .log-item a{flex:0 0 auto;font-size:var(--text-sm);font-weight:600;color:var(--color-brand);text-decoration:none;white-space:nowrap;}
+  .log-item a:hover{text-decoration:underline;}
+  @media(max-width:640px){
+    .log-item{flex-wrap:wrap;}
+  }
+
   /* ============================================ ARCH */
   .arch-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4);}
   @media(max-width:900px){.arch-grid{grid-template-columns:1fr;}}
@@ -540,6 +572,7 @@
 
   /* ============================================ TROUBLESHOOT */
   .ts-hint{margin:calc(-1 * var(--space-4)) 0 var(--space-4);font-size:var(--text-sm);color:var(--color-ink-faint);word-break:keep-all;}
+  .ts-hint-lg{font-size:var(--text-base);}
   .ts-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-4);}
   @media(max-width:900px){.ts-grid{grid-template-columns:1fr;}}
   /* 트러블슈팅 카드 — details로 접어 기본은 타이틀만 노출 */
@@ -1141,12 +1174,80 @@
         </div>
       </div>
 
+      <h3 class="panel-title reveal">학습 기록</h3>
+      <p class="ts-hint ts-hint-lg reveal">Spark를 프로젝트에 바로 쓰기 전에 개념부터 하나씩 제 말로 정리하고 틀린 부분을 고쳐가며 기록을 남겼고, 아래 7단계가 그 과정입니다. 펼쳐보면 각 단계 요약과 GitHub 링크를 볼 수 있습니다.</p>
+      <div class="project-links reveal">
+        <a class="btn btn-secondary" href="https://github.com/jsh340866/Apache-Spark/blob/main/valuepick-batch/docs/spark-learning/00_학습_진행상황.md" target="_blank" rel="noopener">전체 학습 로그 보기</a>
+        <a class="btn btn-secondary" href="https://github.com/jsh340866/Apache-Spark/commits/main" target="_blank" rel="noopener">커밋 히스토리 보기</a>
+      </div>
+      <details class="log-list reveal">
+        <summary>학습 기록 7단계 펼쳐보기</summary>
+        <div class="log-items">
+          <div class="log-item">
+            <span class="num">01</span>
+            <div class="log-body">
+              <h4>Spark가 대체 뭘 하는 물건인가</h4>
+              <p>pandas로는 데이터가 커지면 램이 터지고 코어 하나만 쓴다는 문제를, Spark가 데이터를 쪼개 여러 코어·여러 워커에 나눠 처리해 푸는 방식부터 정리했습니다.</p>
+            </div>
+            <a href="https://github.com/jsh340866/Apache-Spark/blob/main/valuepick-batch/docs/spark-learning/01_스파크_개념.md" target="_blank" rel="noopener">GitHub →</a>
+          </div>
+          <div class="log-item">
+            <span class="num">02</span>
+            <div class="log-body">
+              <h4>파티션 — 조각을 몇 개로 나눌 것인가</h4>
+              <p>실제 클러스터 구성(워커 2대 × 2코어)을 docker-compose 설정에서 직접 확인하고, "코어 1개는 한 번에 파티션 1개를 처리한다"는 규칙이 이 리포에 어떻게 적용되는지 정리했습니다.</p>
+            </div>
+            <a href="https://github.com/jsh340866/Apache-Spark/blob/main/valuepick-batch/docs/spark-learning/02_파티션.md" target="_blank" rel="noopener">GitHub →</a>
+          </div>
+          <div class="log-item">
+            <span class="num">03</span>
+            <div class="log-body">
+              <h4>지연 실행 — 안 하고 미뤘다가 몰아서 한다</h4>
+              <p>DataFrame을 만들어도 실제 데이터는 안 들고 "레시피"만 쌓이다가, action을 만나야 그제서야 한 번에 실행되는 지연 실행(lazy evaluation) 원리를 정리했습니다.</p>
+            </div>
+            <a href="https://github.com/jsh340866/Apache-Spark/blob/main/valuepick-batch/docs/spark-learning/03_지연_실행.md" target="_blank" rel="noopener">GitHub →</a>
+          </div>
+          <div class="log-item">
+            <span class="num">04</span>
+            <div class="log-body">
+              <h4>셔플 심화 — 쪼갠 걸 다시 섞는 비싼 작업</h4>
+              <p>워커끼리는 물리적으로 다른 프로세스라서, 셔플이 일어나면 디스크에 쓰고 네트워크로 전송하고 다시 읽는 3단계를 거쳐야 하는 이유를 정리했습니다.</p>
+            </div>
+            <a href="https://github.com/jsh340866/Apache-Spark/blob/main/valuepick-batch/docs/spark-learning/04_셔플.md" target="_blank" rel="noopener">GitHub →</a>
+          </div>
+          <div class="log-item">
+            <span class="num">05</span>
+            <div class="log-body">
+              <h4>비결정성 — 이 리포 버그 3건의 정체</h4>
+              <p>같은 키의 행이 여러 워커에서 동시에 전송되면 도착 순서가 매번 달라진다는 것을 확인하고, 트러블슈팅 ISSUE 01의 F.first()/F.last() 버그가 왜 생겼는지를 이 개념으로 되짚었습니다.</p>
+            </div>
+            <a href="https://github.com/jsh340866/Apache-Spark/blob/main/valuepick-batch/docs/spark-learning/05_비결정성.md" target="_blank" rel="noopener">GitHub →</a>
+          </div>
+          <div class="log-item">
+            <span class="num">06</span>
+            <div class="log-body">
+              <h4>조인 전략 / 브로드캐스트</h4>
+              <p>JPA의 N+1 문제를 JOIN FETCH로 해결하는 것과 같은 원리로, 작은 쪽 데이터를 통째로 뿌려 셔플 자체를 생략하는 브로드캐스트 조인을 정리했습니다.</p>
+            </div>
+            <a href="https://github.com/jsh340866/Apache-Spark/blob/main/valuepick-batch/docs/spark-learning/06_조인_브로드캐스트.md" target="_blank" rel="noopener">GitHub →</a>
+          </div>
+          <div class="log-item">
+            <span class="num">07</span>
+            <div class="log-body">
+              <h4>성능 — 워커를 늘려도 왜 안 빨라지는가</h4>
+              <p>워커를 늘려도 shuffle.partitions 설정을 그대로 두면 새로 늘어난 코어가 그냥 논다는 것을 확인하고, 늘려서 해결되는 병목과 아닌 병목을 구분하는 기준을 정리했습니다.</p>
+            </div>
+            <a href="https://github.com/jsh340866/Apache-Spark/blob/main/valuepick-batch/docs/spark-learning/07_성능.md" target="_blank" rel="noopener">GitHub →</a>
+          </div>
+        </div>
+      </details>
+
       <h3 class="panel-title reveal">아키텍처</h3>
       <div class="arch-grid reveal">
         <div class="arch-card">
-          <img src="assets/img/spark/cluster-architecture.png" alt="Spark Standalone 클러스터(master 1 + worker 2)와 History Server, Jupyter, MySQL로 구성된 아키텍처" loading="lazy">
+          <img src="assets/img/spark/cluster-architecture.png" alt="Spark Standalone 클러스터(master 1 + worker 2)와 History Server, Jupyter, MySQL로 구성된 아키텍처. spark-master 컨테이너 안에 Master(워커 등록·리소스 배분)와 Driver(잡 스케줄링) 프로세스를 분리해 표시" loading="lazy">
           <div class="cap"><span>클러스터 구성</span><a href="https://jsh340866.github.io/Apache-Spark/cluster-architecture.html" target="_blank" rel="noopener">상세보기</a></div>
-          <p class="arch-desc">Docker Compose 기반 Spark Standalone(master 1 + worker 2), 실패 원인 규명용 History Server, 검증용 Jupyter, 서빙용 MySQL로 구성했습니다.</p>
+          <p class="arch-desc">Docker Compose 기반 Spark Standalone(master 1 + worker 2)입니다. spark-master 컨테이너 안에서 Master(워커 등록·리소스 배분)와 Driver(잡→스테이지→태스크 스케줄링)가 별도 프로세스로 함께 뜨고, 실패 원인 규명용 History Server, 검증용 Jupyter, 서빙용 MySQL로 구성했습니다.</p>
         </div>
         <div class="arch-card">
           <img src="assets/img/spark/data-pipeline.png" alt="원천 수집부터 백테스트, MySQL 서빙까지 5단계 Spark 잡으로 이어지는 데이터 파이프라인" loading="lazy">
@@ -1183,19 +1284,19 @@
           </div>
         </details>
         <details class="ts-card">
-          <summary><span class="label label-muted">ISSUE 04</span><h4>셔플 파티션 고정값 — 스필 277GB</h4></summary>
+          <summary><span class="label label-muted">ISSUE 04</span><h4>History Server 도입 — 죽은 잡의 원인을 사후에 규명하기</h4></summary>
+          <div class="ts-body">
+            <div class="ts-block"><div class="lbl">Problem</div><p>백테스트가 연속 실패하던 시기에 가장 답답했던 건 "어디서 멈췄는지 알 수 없다"는 점이었습니다. 드라이버 UI는 잡 프로세스가 죽으면 함께 사라지기 때문입니다.</p></div>
+            <div class="ts-block"><div class="lbl">Approach</div><p>docker-compose에 History Server를 추가하고, 이벤트 로그를 마운트된 볼륨에 쓰도록 설정했습니다. 컨테이너 내부 경로에 쓰면 재생성 시 로그도 함께 사라져 목적을 잃습니다.</p></div>
+            <div class="ts-result">결과: 아래 스필 277GB를 실측할 수 있었던 것도 이 인프라 덕분입니다. 실패를 분석할 수 있게 만드는 것 자체가 선행 작업이라는 걸 배웠습니다</div>
+          </div>
+        </details>
+        <details class="ts-card">
+          <summary><span class="label label-muted">ISSUE 05</span><h4>셔플 파티션 고정값 — 스필 277GB</h4></summary>
           <div class="ts-body">
             <div class="ts-block"><div class="lbl">Problem</div><p>전략 수를 1,000개에서 21,870개로 늘린 뒤 랭킹 단계가 20분 넘게 태스크 0/4 상태로 멈췄습니다. Spark REST API로 스테이지를 조회하니 메모리 스필 277GB, 디스크 스필 68GB가 쌓이고 있었습니다.</p></div>
             <div class="ts-block"><div class="lbl">Approach</div><p>shuffle.partitions=4는 워커 4코어에 맞춰 1,000개 그리드 기준으로 잡은 값이었는데, 전략이 22배 늘어도 파티션은 그대로라 파티션 하나가 executor 메모리를 초과하고 있었습니다. 설정 파일은 두고 이 실행에만 64로 override했습니다.</p></div>
             <div class="ts-result">결과: 21,870개 전략 백테스트 성공. 다만 64는 이 규모에서 유효했던 값이지 일반 공식이 아니라, 그리드가 바뀌면 다시 조정해야 합니다</div>
-          </div>
-        </details>
-        <details class="ts-card">
-          <summary><span class="label label-muted">ISSUE 05</span><h4>History Server 도입 — 죽은 잡의 원인을 사후에 규명하기</h4></summary>
-          <div class="ts-body">
-            <div class="ts-block"><div class="lbl">Problem</div><p>백테스트가 연속 실패하던 시기에 가장 답답했던 건 "어디서 멈췄는지 알 수 없다"는 점이었습니다. 드라이버 UI는 잡 프로세스가 죽으면 함께 사라지기 때문입니다.</p></div>
-            <div class="ts-block"><div class="lbl">Approach</div><p>docker-compose에 History Server를 추가하고, 이벤트 로그를 마운트된 볼륨에 쓰도록 설정했습니다. 컨테이너 내부 경로에 쓰면 재생성 시 로그도 함께 사라져 목적을 잃습니다.</p></div>
-            <div class="ts-result">결과: 위 스필 277GB를 실측할 수 있었던 것도 이 인프라 덕분입니다. 실패를 분석할 수 있게 만드는 것 자체가 선행 작업이라는 걸 배웠습니다</div>
           </div>
         </details>
         <details class="ts-card">
