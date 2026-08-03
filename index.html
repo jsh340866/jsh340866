@@ -1117,7 +1117,28 @@
           <a class="btn btn-secondary" href="https://github.com/jsh340866/Apache-Spark" target="_blank" rel="noopener">GitHub Repo</a>
         </div>
 
-        <p class="desc">ValuePick 본 서비스가 매일 계산하는 7팩터(PER·PBR·ROE·ROA·부채비율·EPS성장률·모멘텀) 가중 스코어링을 Spark로 그대로 재현하고, 2021~2023년 실제 시세·재무 데이터로 검증했습니다. 가중치 프리셋 2,187개 × 리밸런싱 주기 2개 × 보유종목수 5개 = 21,870개 조합을 동시에 탐색하는 과정이 자연스럽게 대규모 분산 처리 과제가 됐고, 드라이버 OOM·실행계획 폭발·셔플 스필 같은 실제 장애를 겪으며 Spark를 익혔습니다. 룩어헤드 바이어스(미래 시점 데이터 사용) 방지를 위해 재무제표는 DART 접수번호 기준, 가격은 매 리밸런싱 시점마다 실제 종가로 다시 계산하는 이중 장치를 뒀습니다.</p>
+        <div class="role-grid">
+          <div class="role-item">
+            <span class="num">01 · 재현 대상</span>
+            <h4>7팩터 가중 스코어링을 Spark로 재현</h4>
+            <p>ValuePick 본 서비스가 매일 계산하는 PER·PBR·ROE·ROA·부채비율·EPS성장률·모멘텀 가중 스코어링을 그대로 재현하고, 2021~2023년 실제 시세·재무 데이터로 검증</p>
+          </div>
+          <div class="role-item">
+            <span class="num">02 · 탐색 규모</span>
+            <h4>21,870개 조합 동시 탐색</h4>
+            <p>가중치 프리셋 2,187개 × 리밸런싱 주기 2개 × 보유종목수 5개 조합을 동시에 탐색하는 과정이 자연스럽게 대규모 분산 처리 과제로 이어짐</p>
+          </div>
+          <div class="role-item">
+            <span class="num">03 · 실제 장애</span>
+            <h4>드라이버 OOM · 실행계획 폭발 · 셔플 스필</h4>
+            <p>분산 처리 규모를 키우는 과정에서 겪은 실제 장애를 하나씩 원인 규명하고 해결하며 Spark를 익힘</p>
+          </div>
+          <div class="role-item">
+            <span class="num">04 · 바이어스 방지</span>
+            <h4>룩어헤드 바이어스 이중 차단</h4>
+            <p>미래 시점 데이터 사용을 막기 위해 재무제표는 DART 접수번호 기준, 가격은 매 리밸런싱 시점마다 실제 종가로 다시 계산하는 이중 장치를 둠</p>
+          </div>
+        </div>
       </div>
 
       <h3 class="panel-title reveal">아키텍처</h3>
