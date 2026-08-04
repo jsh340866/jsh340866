@@ -1,0 +1,25 @@
+# Parquet 데이터 레이크 (용량 큼, 재수집 가능하므로 커밋 대상 아님)
+data/
+
+# 환경변수 (DART/공공데이터 API 키, MySQL 비밀번호)
+docker/.env
+.env
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Spark
+spark-warehouse/
+metastore_db/
+derby.log
+
+# 실행 로그·이벤트 로그 (2026-07-31 History Server 도입 시 추가 — 재생성 가능, 용량 큼)
+# logs/*.py(검증·디버그 스크립트)는 코드라 커밋 대상. 로그·이벤트만 제외한다.
+logs/*.log
+logs/events/
+
+# 데이터·문서 아카이브 (재생성 가능하거나 폴더로 이미 존재)
+data.zip
+docs/spark-learning.zip

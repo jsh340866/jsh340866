@@ -643,6 +643,9 @@
     border-bottom:1px solid var(--color-border);
     padding:var(--space-3);
   }
+  /* 데이터 검증 캐러셀 — Jupyter 캡처는 표/스키마 위주라 68vh는 과함, 여백만 커짐 */
+  #verifyCarousel .slide-card img{height:min(42vh, 380px);}
+  #verifyCarousel .carousel-btn{top:calc(min(42vh, 380px) / 2);}
   .slide-body{padding:var(--space-4) var(--space-5);}
   .slide-body h4{font-size:var(--text-base);margin-bottom:var(--space-2);word-break:keep-all;}
   .slide-body p{
@@ -1242,6 +1245,64 @@
         </div>
       </details>
 
+      <h3 class="panel-title reveal">데이터 검증</h3>
+      <p class="ts-hint reveal">좌우로 넘겨서 볼 수 있습니다. 각 단계 배치 잡이 Parquet으로 써놓은 결과를, Jupyter로 spark-master:7077에 직접 접속해 다시 읽어 검증했습니다.</p>
+      <div class="carousel reveal" id="verifyCarousel">
+        <div class="carousel-track" id="verifyTrack">
+          <div class="carousel-slide">
+            <div class="slide-card">
+              <img src="assets/img/spark/check-01-ingest-raw.png" alt="Jupyter에서 SparkSession으로 spark-master:7077에 접속해 01_ingest_raw.py 원본 수집 결과를 확인하는 화면. companies 2,555건, prices 35,692건, financials 18,142건, dividends 1,298건 count 출력" loading="lazy">
+              <div class="slide-body">
+                <h4>01 · 원본 수집</h4>
+                <p>companies 2,555건 / prices 35,692건 / financials 18,142건 / dividends 1,298건 저장 확인</p>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-slide">
+            <div class="slide-card">
+              <img src="assets/img/spark/check-02-clean-prices.png" alt="02_clean_prices.py 정제 결과 확인 화면. 전체 35,692건 중 snapshot_type별 분포(current 30,650 / 12m_ago 2,492 / 1m_ago 2,550) 테이블" loading="lazy">
+              <div class="slide-body">
+                <h4>02 · 시세 정제</h4>
+                <p>전체 35,692건, snapshot_type별 분포까지 정제 결과 확인(current/12m_ago/1m_ago)</p>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-slide">
+            <div class="slide-card">
+              <img src="assets/img/spark/check-03-indicators.png" alt="03_build_indicators.py 결과 확인 화면. 전체 86건, printSchema()로 EPS·BPS·PER·PBR·ROE·부채비율·배당수익률·ROA·모멘텀·F-Score·EPS성장률·year 컬럼 구조 출력" loading="lazy">
+              <div class="slide-body">
+                <h4>03 · 지표 계산</h4>
+                <p>저장된 지표 스키마 확인(EPS/BPS/PER/PBR/ROE 등)</p>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-slide">
+            <div class="slide-card">
+              <img src="assets/img/spark/check-04-backtest.png" alt="check_backtest_score.py 결과 확인 화면. shuffle.partitions=64 override로 재시도해 성공했다는 주석과 함께 전략 수(summary) 21,870, 구간 수익률 행 수(period_returns) 503,010, printSchema() 결과(final_cum_return, mdd, avg_period_return, stddev_period_return, sharpe_ratio 등) 출력" loading="lazy">
+              <div class="slide-body">
+                <h4>04 · 백테스트</h4>
+                <p>전략 21,870개 · 구간 수익률 503,010행 저장 확인</p>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-slide">
+            <div class="slide-card">
+              <img src="assets/img/spark/check-05-market-compare.png" alt="check_market_compare.py 결과 확인 화면. ALL과 KOSPI를 각각 따로 실행해 저장한 결과를 합치는 코드와 함께 ALL 전략 수 21,870, KOSPI 전략 수 21,870, 합계 43,740 count 출력" loading="lazy">
+              <div class="slide-body">
+                <h4>05 · 마켓 비교</h4>
+                <p>ALL/KOSPI 각각 21,870개 전략 실행 결과 합계 확인</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="carousel-btn" type="button" data-dir="-1" aria-label="이전 화면">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button class="carousel-btn" type="button" data-dir="1" aria-label="다음 화면">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+
       <h3 class="panel-title reveal">아키텍처</h3>
       <div class="arch-grid reveal">
         <div class="arch-card">
@@ -1525,11 +1586,11 @@
     dlg.addEventListener('close', function(){ view.removeAttribute('src'); });
   })();
 
-  // 분석 결과 캐러셀 — 끝에 도달하면 멈춤(순환 없음)
-  (function(){
-    const track = document.getElementById('sparkTrack');
+  // 캐러셀(분석 결과 / 데이터 검증) — 끝에 도달하면 멈춤(순환 없음)
+  document.querySelectorAll('.carousel').forEach(function(carousel){
+    const track = carousel.querySelector('.carousel-track');
     if(!track) return;
-    const btns = document.querySelectorAll('#sparkCarousel .carousel-btn');
+    const btns = carousel.querySelectorAll('.carousel-btn');
     const slides = Array.prototype.slice.call(track.children);
     const total = slides.length;
 
@@ -1583,7 +1644,7 @@
     }, {passive:true});
 
     render();
-  })();
+  });
 
   // 프로젝트 전환 탭 (ValuePick / Spark)
   (function(){
