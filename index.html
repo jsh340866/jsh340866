@@ -1251,28 +1251,28 @@
         <div class="carousel-track" id="verifyTrack">
           <div class="carousel-slide">
             <div class="slide-card">
-              <img src="assets/img/spark/check-01-ingest-raw.png" alt="Jupyter에서 SparkSession으로 spark-master:7077에 접속해 01_ingest_raw.py 원본 수집 결과를 확인하는 화면. companies 2,555건, prices 35,692건, financials 18,142건, dividends 1,298건 count 출력" loading="lazy">
+              <img src="assets/img/spark/check-01-ingest-raw.png" alt="Jupyter에서 SparkSession으로 spark-master:7077에 접속해 01_ingest_raw.py 원본 수집 결과를 확인하는 화면. companies 2,555건, prices 1,797,973건, financials 1,539,859건, dividends 135,587건 count 출력" loading="lazy">
               <div class="slide-body">
                 <h4>01 · 원본 수집</h4>
-                <p>companies 2,555건 / prices 35,692건 / financials 18,142건 / dividends 1,298건 저장 확인</p>
+                <p>companies 2,555건 / prices 1,797,973건 / financials 1,539,859건 / dividends 135,587건 저장 확인</p>
               </div>
             </div>
           </div>
           <div class="carousel-slide">
             <div class="slide-card">
-              <img src="assets/img/spark/check-02-clean-prices.png" alt="02_clean_prices.py 정제 결과 확인 화면. 전체 35,692건 중 snapshot_type별 분포(current 30,650 / 12m_ago 2,492 / 1m_ago 2,550) 테이블" loading="lazy">
+              <img src="assets/img/spark/check-02-clean-prices.png" alt="02_clean_prices.py 정제 결과 확인 화면. 전체 1,797,973건 중 snapshot_type별 분포(current 1,774,650 / 12m_ago 11,477 / 1m_ago 11,846) 테이블" loading="lazy">
               <div class="slide-body">
                 <h4>02 · 시세 정제</h4>
-                <p>전체 35,692건, snapshot_type별 분포까지 정제 결과 확인(current/12m_ago/1m_ago)</p>
+                <p>전체 1,797,973건, snapshot_type별 분포까지 정제 결과 확인(current/12m_ago/1m_ago)</p>
               </div>
             </div>
           </div>
           <div class="carousel-slide">
             <div class="slide-card">
-              <img src="assets/img/spark/check-03-indicators.png" alt="03_build_indicators.py 결과 확인 화면. 전체 86건, printSchema()로 EPS·BPS·PER·PBR·ROE·부채비율·배당수익률·ROA·모멘텀·F-Score·EPS성장률·year 컬럼 구조 출력" loading="lazy">
+              <img src="assets/img/spark/check-03-indicators.png" alt="03_build_indicators.py 결과 확인 화면. 전체 18,598건, printSchema()로 stock_code·fs_div·currency·rcept_no·EPS·BPS·PER·PBR·ROE·부채비율·배당수익률·ROA·모멘텀·F-Score·EPS성장률·순이익·자기자본·배당금·year 컬럼 구조 출력" loading="lazy">
               <div class="slide-body">
                 <h4>03 · 지표 계산</h4>
-                <p>저장된 지표 스키마 확인(EPS/BPS/PER/PBR/ROE 등)</p>
+                <p>저장된 지표 스키마 확인 — 전체 18,598건(EPS/BPS/PER/PBR/ROE 등)</p>
               </div>
             </div>
           </div>
