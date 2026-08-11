@@ -1,81 +1,83 @@
-# CLAUDE.md — valuepick 백엔드
+# CLAUDE.md
 
-이 파일은 Claude가 valuepick 프로젝트에서 작업할 때 따라야 할 규칙을 정의한다.
+Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
+
+**Scope:** Only what current models still get wrong. If the model or the harness already handles something reliably, it doesn't belong here - a rule that restates default behavior burns context and buys nothing.
+
+**Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
+
+**Language:** Respond in Korean by default. Code, class names, and technical terms stay in English.
+
+## 1. State Assumptions, Then Proceed
+
+**Say what you assumed. Keep going. Default the rest.**
+
+Before implementing:
+- State your assumptions in one line, then start.
+- If multiple interpretations exist, pick the likeliest and say which one you picked.
+- If a simpler approach exists, say so while doing the work - not as a question that blocks it.
+- Ask only when the answer changes what gets built, not how well, and the wrong choice can't be cheaply undone.
+
+A stated assumption gets corrected in seconds. A question costs a round-trip and hands the work back to the user. If you're about to ask a second question in one task, you're doing it wrong.
+
+## 2. Simplicity First
+
+**Minimum code that solves the problem. Nothing speculative.**
+
+- No features beyond what was asked.
+- No abstractions for single-use code.
+- No "flexibility" or "configurability" that wasn't requested.
+- No error handling for impossible scenarios.
+- If you write 200 lines and it could be 50, rewrite it.
+
+Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
+
+## 3. Surgical Changes
+
+**Touch only what you must. Clean up only your own mess.**
+
+When editing existing code:
+- Don't "improve" adjacent code, comments, or formatting.
+- Don't refactor things that aren't broken.
+- Match existing style, even if you'd do it differently.
+- If you notice unrelated dead code, mention it - don't delete it.
+
+When your changes create orphans:
+- Remove imports/variables/functions that YOUR changes made unused.
+- Don't remove pre-existing dead code unless asked.
+
+The test: Every changed line should trace directly to the user's request.
+
+## 4. Verify Before Done
+
+**If you touched code, run the check before saying "done" - and report what actually ran.**
+
+- `npm test`, `pytest`, `cargo test`, whatever the project uses. Smallest relevant check first, broader checks when risk is high.
+- No test setup? At minimum, verify the project builds or typechecks.
+- Report the exact command and its result: "passed", "failed with X", or "not run because Y".
+- Never write "done", "fixed", or "works" unless a concrete check backs it.
+- Run it proactively, before the user signals "끝", "완료", "다 됐어".
+
+This is the step LLMs skip most often. Treat it as non-negotiable.
+
+## 5. Teach One Thing On The Way Out
+
+**End with what the user would want to know next time. Two or three sentences.**
+
+When the work is done:
+- Name the one concept, tradeoff, or gotcha that actually mattered here.
+- Teach what the code doesn't show: why this way over the obvious one, which default you leaned on, what breaks first at scale.
+- If it needs a heading, it's too long. If it restates the diff, delete it.
+- Skip it when the change is trivial, or when the user is the one who taught you the thing.
+
+Why: an agent that only ships code leaves the user unable to maintain it. They should finish each task slightly more able to do it without you.
+
+## 6. Commits: No Co-Authored-By Trailer
+
+**Never add a `Co-Authored-By: Claude ...` trailer to commit messages.**
+
+Why: on this user's personal/portfolio repos, the trailer causes GitHub to list "claude" on the Contributors sidebar, which misrepresents solo work in a job-hunting context. Omit it by default, even if not explicitly told each time. Only include it if the user explicitly asks for it in the moment.
 
 ---
 
-## 0. 세션 시작 시
-
-새 대화 시작 시 `.claude/MEMORY.md`를 읽고 내용을 반영한다. 읽었다는 사실은 따로 말하지 않는다.
-
----
-
-## 1. 응답 언어
-
-- **기본 언어는 한국어**다. 코드·클래스명·기술 용어는 영어 그대로 사용한다.
-- 설명은 자연스러운 구어체로 존댓말 사용, 보고서 형식의 딱딱한 표현은 피한다.
-
----
-
-## 2. 코딩 규칙
-
-1. **기존 패턴을 최우선으로 따른다.**
-   - RestTemplate 기반 외부 API 호출 방식 유지
-   - `@Scheduled` 크론식 스케줄러 패턴 유지
-   - JPA Repository + Service 계층 구조 유지
-
-2. **간결함을 유지한다.**
-   - 불필요한 추상화, 주석, 미래 확장용 코드를 추가하지 않는다.
-   - 이미 있는 유틸/패턴을 재사용하고, 새 코드를 최소화한다.
-   - 코드 설명을 할 때는 자세히한다.
-
-3. **성능을 고려한다.**
-   - JPA N+1 문제를 인식하고, 필요 시 `@EntityGraph` 또는 fetch join을 사용한다.
-   - 대량 데이터 수집 시 배치 처리를 고려한다.
-   - `@Async` 비동기 처리가 이미 설정되어 있으므로 적극 활용한다.
-
-
----
-
-## 3. 작업 방식
-
-- **단순 작업**(단일 파일 수정, 명확한 변경)은 바로 실행한다.
-- **복잡한 작업**(여러 파일 수정, 새 기능 추가, 구조 변경)은 계획을 먼저 제시하고 승인 후 진행한다.
-- 질문은 꼭 필요한 것만, 최대 3개로 제한한다.
-- 불확실한 정보는 **절대 말하지 않는다.** 모르면 "모른다"고 하고, 확인이 필요하면 실제로 확인한 뒤에 말한다.
-- 외부 API 응답 필드, 스펙, 동작 방식은 반드시 **실제로 호출하거나 코드를 읽어서 확인**한 뒤에만 언급한다. 학습 데이터 기반 추측을 사실처럼 말하지 않는다.
-
----
-
-## 4. 프로젝트 컨텍스트
-
-### 기술 스택
-- Spring Boot, JPA/Hibernate, MySQL (investdb)
-- RestTemplate (외부 API 호출)
-- `@Scheduled` + `@Async` (배치/스케줄러)
-
-### 외부 API
-| API | 용도 | 키 설정 |
-|---|---|---|
-| DART | 재무제표, 공시 데이터 | `dart.api.key` |
-| 공공데이터포털 | 주가 (XML 파싱) | `stock.api.key` |
-| 한국수출입은행 | 환율 | `koreaexim.api.key` |
-| KRX | 상장사 정보 | `krx.api.key` |
-
-### 주요 스케줄러 패턴
-- 평일 16:00 — 당일 데이터 수집
-- 매일 02:00 — 오래된 데이터 정리
-- 크론식 예시: `0 0 16 * * MON-FRI`
-
-### 핵심 엔티티
-Company, StockPrice, StockIndicator, FinancialStatement, DividendInfo, Exchange, Top100, MarketIndex
-
----
-
-## 5. 하지 말아야 할 것
-
-- 기존에 없던 의존성을 임의로 추가하지 않는다.
-- `ddl-auto=update` 환경이므로 엔티티 변경 시 기존 데이터에 미치는 영향을 반드시 고려한다. 변경이 필요할시 요청 변경을 묻는다.
-- API 키를 코드에 하드코딩하지 않는다. 항상 `application.properties` 참조.
-- 불확실한 정보를 사실인듯 말하지 않는다.
-- 외부 API 응답 필드, 스펙, 동작 방식은 학습 데이터로 추측하지 않는다. 반드시 실제 호출이나 코드를 통해 확인한 뒤에만 언급한다.
+**These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and stated assumptions get corrected early instead of surfacing as mistakes late.

@@ -308,14 +308,14 @@
   }
   .hero-text{max-width:640px;min-width:0;}
   .hero-photo{
-    flex:0 0 auto;width:240px;height:240px;border-radius:50%;overflow:hidden;
+    flex:0 0 auto;width:300px;height:300px;border-radius:50%;overflow:hidden;
     border:1px solid var(--color-border);box-shadow:var(--shadow-soft);
     background:var(--color-surface-sunken);
   }
-  .hero-photo img{width:100%;height:100%;object-fit:cover;display:block;}
+  .hero-photo img{width:100%;height:100%;object-fit:cover;object-position:center 20%;display:block;}
   @media(max-width:760px){
     .hero-inner{flex-direction:column-reverse;gap:var(--space-6);}
-    .hero-photo{width:140px;height:140px;}
+    .hero-photo{width:180px;height:180px;}
   }
   /* eyebrow — 페이지에서 accent를 쓰는 유일한 곳. 구직 상태를 즉시 눈에 띄게 */
   .hero .eyebrow{
@@ -795,7 +795,6 @@
     <div class="wrap">
       <div class="hero-inner">
         <div class="hero-text">
-          <span class="eyebrow">OPEN TO WORK · 국비 풀스택 과정 26.08 수료 예정</span>
           <h1>반갑습니다,<br><span class="name">정승원</span>입니다</h1>
           <p class="lead">DART·KRX·환율 등 4종 외부 API를 매일 자동 수집해 투자지표를 계산하는 백엔드 파이프라인을 설계·구현했습니다. 데이터가 안정적으로 쌓이고 정확한 시간에 도는 시스템을 만듭니다.</p>
           <div class="hero-actions">
@@ -804,7 +803,7 @@
           </div>
         </div>
         <div class="hero-photo">
-          <img src="https://avatars.githubusercontent.com/u/127188283?s=400&v=4" alt="정승원 프로필 사진" width="400" height="400" loading="eager">
+          <img src="assets/img/profile.png" alt="정승원 프로필 사진" width="400" height="400" loading="eager">
         </div>
       </div>
     </div>
@@ -826,7 +825,7 @@
         <div class="timeline">
           <div class="t-row"><span class="t-date">2022.02</span><span>4년제 학사 졸업</span></div>
           <div class="t-row"><span class="t-date">2026.03</span><span>국비 풀스택 개발자 육성 과정 시작</span></div>
-          <div class="t-row"><span class="t-date">2026.08</span><span>과정 수료 예정</span></div>
+          <div class="t-row"><span class="t-date">2026.08</span><span>과정 수료</span></div>
         </div>
       </div>
       <div class="trait-list reveal">
